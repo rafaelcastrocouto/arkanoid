@@ -1,0 +1,45 @@
+html, body{
+  width: 100%;
+  height: 100%;
+}
+body{
+  margin: 0;
+  text-align: center;
+}
+#container{
+  position: relative;
+  text-align: center;   
+  display: inline-block;
+  background: white;
+}
+#stage{
+  position: relative;
+}
+#menu{
+  position: relative;
+  display: inline-block;
+}
+#menu button{
+  width: 60%;
+  padding: 2%;
+  font-family: 'Pixel';
+}
+#ui{
+  font-family: 'Digital';
+  color: #fff;
+  padding: 0.5%;
+  position: relative;
+  top: 1%;
+  width: 97%;
+}
+#padd{
+  position: absolute;
+  border-radius: 100% 100% 0 0;    
+}  
+.ball{
+  position: absolute;
+  border-radius: 100%;
+}
+.block{
+  position: absolute;
+}
