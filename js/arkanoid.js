@@ -1,4 +1,6 @@
-window.addEventListener('load', function(){
+var gameStart =  window.attachEvent || window.addEventListener;
+if(!gameStart) gameStart = function(s, f){window.onload = f};
+gameStart('load', function(){
   var game = {
     init: function(){
       game.mode = 'menu';
@@ -11,9 +13,11 @@ window.addEventListener('load', function(){
       game.menu.init();
       game.score.init();
       game.audio.init();
-      game.update.init();
       game.paint(document.body, '#bbb');
       game.keyboard.events();
+      game.touch.init();
+      if(!game.touchable) game.update.init();
+      window.onselectstart = function(){return false};
     },
     create: function(t, props){
       var el = document.createElement(t);
@@ -229,6 +233,7 @@ window.addEventListener('load', function(){
             game.padd.el.style['bottom'] = game.padd.y + 'px';
             game.padd.el.style['left'] = game.padd.x + 'px';
             game.padd.el.style['display'] = 'block';
+            game.padd.el.style['box-shadow'] = '0 0 ' + (15 * game.un) + 'px black';
             game.paint(game.padd.el, '#789');
           break;
         }
@@ -246,6 +251,14 @@ window.addEventListener('load', function(){
         if(game.padd.inLimit(x)){
           game.padd.x = x;
         }
+      },
+      moveBall: function(x){
+        if(game.padd.inLimit(x)){
+          if(game.mode == 'ready') 
+            game.ball.moveTo({x: x - game.ball.first.radius + (game.padd.width / 2)});
+          if(game.mode == 'ready' || game.mode == 'playing')
+            game.padd.moveTo(x);          
+        } 
       },
       checkCollision: function(ball){
         if(game.collision(ball, game.padd)){ 
@@ -322,6 +335,7 @@ window.addEventListener('load', function(){
         block.el.style['height'] = block.height + 'px';
         block.el.style['bottom'] = block.y + 'px';
         block.el.style['left'] = block.x + 'px';
+        block.el.style['box-shadow'] = '0 0 ' + (15 * game.un) + 'px black';
         game.paint(block.el, block.color[0]);
         game.stage.add(block.el);
         return block;   
@@ -379,6 +393,7 @@ window.addEventListener('load', function(){
         ball.el.style['width'] = ball.size + 'px';
         ball.el.style['height'] = ball.size + 'px';
         ball.el.style['display'] = 'block';
+        ball.el.style['box-shadow'] = '0 0 ' + (15 * game.un) + 'px black';
         game.paint(ball.el, '#244');
         game.stage.add(ball.el);
         return ball;     
@@ -393,11 +408,10 @@ window.addEventListener('load', function(){
             game.ball.acceleration = 1.01; 
             game.ball.first = game.ball.init(0, game.ball.startRadius * 2);    
             game.ball.first.i = 0; 
-            var o = {
+            game.ball.moveTo({
               x: (game.width / 2) - game.ball.startRadius, 
               y: game.padd.height + game.padd.y + game.un
-            };
-            game.ball.moveTo(o, game.ball.first);
+            });
             game.ball.array = [game.ball.first];
           break;
         }
@@ -412,12 +426,13 @@ window.addEventListener('load', function(){
           var x = 0;
           var ls = game.padd.lastSpeed
           if(ls) x = ls;
-          game.ball.first.speed.x = x / (10 * game.un);
+          game.ball.first.speed.x = x / (100 * game.un);
           game.ball.first.speed.y = game.ball.startSpeed;
           game.ball.move(); 
         }
       },   
       moveTo: function(o, ball){
+        if(!ball) ball = game.ball.first;
         ball.x = o.x;
         ball.el.style['left'] = o.x + 'px';
         if(o.y){
@@ -453,11 +468,10 @@ window.addEventListener('load', function(){
           }
           //keep moving
           else {
-            var o = {
+              game.ball.moveTo({
               x: ball.x + ball.speed.x,
               y: ball.y + ball.speed.y
-            }
-            game.ball.moveTo(o, ball); 
+            }); 
           }
         }
         if(game.block.array.length == 0) game.nextLevel();
@@ -513,11 +527,14 @@ window.addEventListener('load', function(){
         alert(str);
       },
       init: function(){
+        game.score.scoreboard = [];
         try { game.score.scoreboard = JSON.parse(localStorage.getItem('scoreboard')) }
-        catch(e) { game.score.scoreboard = [];}
-        if(game.score.scoreboard.length){
-          game.score.enable();
-        }
+        catch(e) { console.log('No score detected.') }
+        if(game.score.scoreboard){
+          if(game.score.scoreboard.length){
+            game.score.enable();
+          }
+        } else game.score.scoreboard = [];
       },
       save: function(){
         localStorage.setItem('scoreboard', JSON.stringify(game.score.scoreboard));
@@ -539,32 +556,54 @@ window.addEventListener('load', function(){
       events: function(){
         window.addEventListener('mousemove', game.mouse.move);
         window.addEventListener('click', game.mouse.click);
+        window.addEventListener('dblclick', function(){return false});
       },
       click: function(e){ 
         game.noDefault(e);
         game.ball.launch(); 
       },      
       move: function(e){ 
-        var ex = e.webkitMovementX || e.mozMovementX;
-        if(!ex) ex = e.clientX - game.padd.x;
-        if(ex > 0 && ex > game.padd.speed) 
-          ex = game.padd.speed;
-        if(ex < 0 && ex < -game.padd.speed) 
-          ex = -game.padd.speed;        
-        var x = game.padd.x + ex;
-        var m = game.padd.width / 2;
-        if(game.padd.inLimit(x)){
-          if(game.mode == 'ready') 
-            game.ball.moveTo({x: x - game.ball.first.radius + m}, game.ball.first);
-          if(game.mode == 'ready' || game.mode == 'playing')
-            game.padd.moveTo(x);
-        }  
-        game.padd.lastSpeed = ex; 
+        var x = e.clientXX || e.mozMovementX;
+        if(!x) x = e.clientX - game.padd.x;
+        var px = game.padd.x + x - (200 * game.un);
+        game.padd.moveBall(px); 
+        game.padd.lastSpeed = x; 
         game.loop.runAgain(function(){
           game.padd.lastSpeed = 0; 
         }, 100)
-      }   
+      }  
     },
+
+    touch:{
+      init: function(){
+        var el = window;
+        game.touchable = 'createTouch' in document;
+        game.touches = [];
+
+        el.addEventListener('touchmove', game.touch.move);
+        el.addEventListener('touchstart', game.touch.event);
+        el.addEventListener('touchend', game.touch.event);
+        el.addEventListener('gesturemove', game.touch.move);
+        el.addEventListener('gesturemovestart', game.touch.event);
+        el.addEventListener('gesturemoveend', game.touch.event);
+        window.onorientationchange = game.container.el.style['top'] = '10px';
+        game.touch.loop();
+      },
+      loop: function(){
+        if(game.touches[0] && game.touches[0].clientX) game.padd.moveBall(game.touches[0].clientX);
+        game.loop.runAgain(game.touch.loop);
+      },
+      move: function(e){
+        game.touchable = 1;
+        e.preventDefault();
+        game.touches = e.touches;
+      },
+      event: function(e){
+        game.touchable = 1;
+        game.touches = e.touches;      
+      }
+    },
+
 
     /////////////////KEYBOARD/////////////////
 
@@ -572,7 +611,6 @@ window.addEventListener('load', function(){
       events: function(){
         window.addEventListener('keydown', game.keyboard.down);
         window.addEventListener('keyup', game.keyboard.up);
-        document.onselectstart = function(){return false};
       },
       down: function(e){
         switch (e.which) { 
@@ -593,13 +631,6 @@ window.addEventListener('load', function(){
           case 68: // D
             game.noDefault(e);
             game.padd.key = 1; 
-          break;
-          default:
-            if(game.block.array && game.block.array.length > 0){
-              var block = game.block.array[0];
-              block.i = 0;
-              game.block.end(block)
-            }
           break;
         };
         return game.mode;
@@ -663,7 +694,7 @@ window.addEventListener('load', function(){
             ++game.loop.count;
           }
           if(game.loop.count) {
-            game.ball.moveTo({x: game.ball.first.x}, game.ball.first);              
+            game.ball.moveTo({x: game.ball.first.x});              
             game.padd.moveTo(game.padd.x);
           }
         }
@@ -691,7 +722,10 @@ window.addEventListener('load', function(){
         var l = game.audio.list;
         for (var i = 0; i < l.length; i++) {
           var name = l[i];
-          game.audio[name] = game.create('audio', {src: 'audio/'+ name +'.wav'});
+          
+          if(window.location.host == "rafaelcastrocouto.jsapp.us") game.audio[name] = game.create('audio', {src: 'http://sites.google.com/site/rafaelcastrocouto/download/arkanoid/'+ name +'.wav'});
+          else game.audio[name] = game.create('audio', {src: 'audio/'+ name +'.wav'});
+
           game.add(game.audio[name]);          
         };
       }
