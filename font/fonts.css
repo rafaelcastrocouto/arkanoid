@@ -1,0 +1,12 @@
+@font-face{
+  font-family: 'Digital'; 
+  src: url('segment.eot'),    
+       url('segment.ttf'),
+       url('segment.woff');
+}
+@font-face{
+  font-family: 'Pixel';
+  src: url('munro.eot'),    
+       url('munro.ttf'),
+       url('munro.woff');
+}
