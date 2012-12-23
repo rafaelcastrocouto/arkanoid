@@ -810,9 +810,10 @@ var Game = function(){
         game.touch.loop();
       },
       loop: function(){
-        if(game.touches[0] && game.touches[0].clientX) 
+        if(game.touches[0] && game.touches[0].clientX){ 
           game.padd.moveTo(game.touches[0].clientX);
-          game.loop(game.touch.loop);
+        }
+        game.loop(game.touch.loop);
       },
       move: function(e){
         e.preventDefault();
