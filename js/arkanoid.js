@@ -328,14 +328,14 @@ var Game = function(){
       if(game.currentLevel == game.level.length) game.win();
       else game.loadLevel(game.currentLevel);
     }, 
-    level: [
+    level: [ //upside down
       /*0*/ ['brick','plast','plast','brick','plast','brick','plast','plast','brick',
              'plast','plast','stone','brick','plast','brick','stone','plast','plast'],
 
       /*1*/ ['brick','plast','plast','brick','plast','brick','plast','plast','brick',
              'stone','stone','stone','plast','stone','plast','stone','stone','stone'],
 
-      /*2*/ ['brick','stone','plast','stone','plast','stone','brick','stone','brick',
+      /*2*/ ['brick','stone','brick','stone','plast','stone','brick','stone','brick',
              'stone','brick','stone','brick','stone','brick','stone','brick','stone']             
     ],  
 
@@ -697,6 +697,9 @@ var Game = function(){
         var x = mx - offset;
         game.pad.moveTo(game.pad.inLimit(x));
       },
+      touchMove: function(tx){
+        game.pad.x = game.pad.inLimit(x);
+      },
       moveTo: function(x){ 
         var s = x - game.pad.x;
         if(s > 100) s = 100;
@@ -779,7 +782,32 @@ var Game = function(){
         game.mouse.events();
         game.touch.events();
         game.keyboard.events();
-      }
+        game.date = (new Date).getTime();
+        game.events.loop();
+      },
+      loop: function(){ 
+        var isReady = (game.mode == 'ready');
+        var isPlaying = (isReady || game.mode == 'playing');
+        game.events.delay = 0;
+        while ((new Date).getTime() > game.date) { 
+          if(isPlaying){
+            //keyboard
+            if(game.pad.key) game.pad.keyboardMove(game.pad.key);
+            //touch
+            var e = game.touches[0];
+            if(e && e.clientX){
+              game.pad.touchMove(e.clientX / game.convert);
+            }
+          }
+          game.date += game.rate;
+          ++game.events.delay;
+        } 
+        if(game.events.delay && isPlaying) {
+          game.pad.el.style['left'] = game.px(game.pad.x); 
+        }
+        if(isReady) game.ball.followPad(); 
+        game.loop(game.events.loop)
+      } 
     },
 
     ///////////////////////////////MOUSE///////////////////////////////
@@ -816,19 +844,6 @@ var Game = function(){
         window.on('gesturemove', game.touch.move);
         window.on('gesturemovestart', game.touch.move);
         window.on('gesturemoveend', game.touch.move);
-        game.touch.loop();
-      },
-      loop: function(){
-        var isReady = (game.mode == 'ready');
-        var isPlaying = (isReady || game.mode == 'playing');
-        if(isPlaying){
-          var e = game.touches[0];
-          if(e && e.clientX){
-            game.pad.mouseMove(e.clientX / game.convert);
-            if(isReady) game.ball.followPad();
-          }
-        }
-        game.loop(game.touch.loop);
       },
       move: function(e){
         e.preventDefault();
@@ -845,8 +860,6 @@ var Game = function(){
         window.on('selectstart', function(){return false});
         window.on('keydown', game.keyboard.down);
         window.on('keyup', game.keyboard.up);
-        game.date = (new Date).getTime();
-        game.keyboard.loop();
       },    
       down: function(e){
         var key = e.which || e.keyCode;
@@ -889,20 +902,7 @@ var Game = function(){
             game.pad.speed = 0;
           break;          
         }
-      },
-      loop: function(){ 
-        var isReady = (game.mode == 'ready');
-        var isPlaying = (isReady || game.mode == 'playing');
-        game.keyboard.delay = 0;
-        while ((new Date).getTime() > game.date) { 
-          if(game.pad.key && isPlaying) game.pad.keyboardMove(game.pad.key);
-          game.date += game.rate;
-          ++game.keyboard.delay;
-        } 
-        if(game.pad.key && game.keyboard.delay && isPlaying) game.pad.el.style['left'] = game.px(game.pad.x); 
-        if(game.pad.key && isReady) game.ball.followPad(); 
-        game.loop(game.keyboard.loop)
-      } 
+      }
     },  
     pause: function(){
       if(game.mode != 'paused' && game.mode != 'menu'){ // PAUSE
