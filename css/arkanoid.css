@@ -7,10 +7,12 @@ html, body {
 div{
   position: absolute;
 }
-#menu button{
+.button{
   font-family: 'Pixel';
   text-align: center;
   display: block;
+  height: 20%;
+  width: 100%;
 }
 #ui{
   font-family: 'Digital';
