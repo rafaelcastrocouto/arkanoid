@@ -62,9 +62,6 @@ var Game = function(){
         }
         game.css.rules = {
           '.button': { 
-            'height': game.px(70),
-            'width': game.px(300),
-            'pading': game.px(15),
             'font-size': game.px(32)
           },       
           '.shadow' : {
@@ -198,10 +195,10 @@ var Game = function(){
         game.menu.addButtons();  
       },    
       css: function(){
-        game.menu.width = 300;
-        game.menu.height = 280;
-        game.menu.left = (game.width / 2) - (300 / 2);
-        game.menu.top = (game.height / 2) - (280 / 2);
+        game.menu.width = 320;
+        game.menu.height = 460;
+        game.menu.left = (game.width / 2) - (game.menu.width / 2);
+        game.menu.top = (game.height / 2) - (game.menu.height / 2);
         game.css.addRule('#menu',{
           'width': game.px(game.menu.width),
           'height': game.px(game.menu.height),
@@ -362,7 +359,7 @@ var Game = function(){
         game.css.addRule('#ui',{
           'text-shadow': '0 0 '+ game.px(12) +' #ddf',
           'font-size': game.px(30),
-          'pading': game.px(6)
+          'padding': game.px(6)
         });
       }
     }, 
