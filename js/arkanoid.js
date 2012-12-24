@@ -1243,7 +1243,7 @@ var Game = function(){
           var props = {
             id: 'github', 
             className: 'button',         
-            textContent: 'GITHUB'
+            textContent: 'SOURCE'
           }
           game.menu.github.el = game.create('button', props);
           game.menu.github.el.on('click', game.menu.github);
