@@ -843,7 +843,7 @@ var Game = function(){
         window.on('touchend', game.touch.move);
       },
       move: function(e){
-        e.preventDefault();
+        //e.preventDefault();
         game.touches = e.changedTouches;
         for (var i=0; i < game.touches.length; i++) {
           game.pad.mouseMove(game.touches[i].pageX / game.convert);
