@@ -794,10 +794,10 @@ var Game = function(){
             //keyboard
             if(game.pad.key) game.pad.keyboardMove(game.pad.key);
             //touch
-            var e = game.touches[0];
-            if(e && e.clientX){
-              game.pad.touchMove(e.clientX / game.convert);
-            }
+            //var e = game.touches[0];
+            //if(e && e.clientX){
+            //  game.pad.touchMove(e.clientX / game.convert);
+            //}
           }
           game.date += game.rate;
           ++game.events.delay;
@@ -836,19 +836,18 @@ var Game = function(){
 
     touch:{
       events: function(){
-        game.touchable = 'createTouch' in document;
         game.touches = [];
-        window.on('touchmove', game.touch.move);
         window.on('touchstart', game.touch.move);
+        window.on('touchmove', game.touch.move);
+        window.on('touchleave', game.touch.move);
         window.on('touchend', game.touch.move);
-        window.on('gesturemove', game.touch.move);
-        window.on('gesturemovestart', game.touch.move);
-        window.on('gesturemoveend', game.touch.move);
       },
       move: function(e){
-        //e.preventDefault();
-        game.touchable = 1;
-        game.touches = e.touches;
+        e.preventDefault();
+        game.touches = e.changedTouches;
+        for (var i=0; i < game.touches.length; i++) {
+          game.pad.mouseMove(game.touches[i].pageX / game.convert);
+        }
       }
     },
 
