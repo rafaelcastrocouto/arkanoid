@@ -1,7 +1,7 @@
+#[Play now!](http://rafaelcastrocouto.github.com/arkanoid/arkanoid.htm "Play now!")
+
 Arkanoid
 =======
-
-Arkanoid is a JavaScript 2D game for HTML5 browsers.
-  <http://rafaelcastrocouto.jsapp.us/arkanoid.htm>
+A JavaScript 2D game for HTML5 browsers.
 
 Please gimme some feedback!
