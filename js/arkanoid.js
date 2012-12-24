@@ -150,11 +150,9 @@ var Game = function(){
         if(c.b < 0) c.b = 0; if(c.b > 15) c.b = 15;
 
         var color2 = '#' + c.r.toString(16) + c.g.toString(16) + c.b.toString(16);
-        var bkg = [ 
-        color,
+        var bkg = [ color,
         '-webkit-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
-        '-moz-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)', 
-        ];
+        '-moz-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)'];
         return bkg;
       }
     },
@@ -218,6 +216,7 @@ var Game = function(){
         game.menu.buttons.newGame();
         game.menu.buttons.loadGame();
         game.menu.buttons.highScore();
+        game.menu.buttons.github(); 
         game.menu.buttons.credits();            
       },
       buttons: {
@@ -251,6 +250,16 @@ var Game = function(){
           game.menu.highScore.el = game.create('button', props);
           game.menu.add(game.menu.highScore.el);     
         },
+        github: function(){
+          var props = {
+            id: 'github', 
+            className: 'button',         
+            textContent: 'GITHUB'
+          }
+          game.menu.github.el = game.create('button', props);
+          game.menu.github.el.on('click', game.menu.github);
+          game.menu.add(game.menu.github.el);     
+        },        
         credits: function(){
           var props = {
             id: 'showCredits',
@@ -290,6 +299,9 @@ var Game = function(){
           str += sb[i].name + ': ' + sb[i].score + '\n';
         };
         alert(str);
+      },
+      github: function(){
+        window.location = 'https://github.com/rafaelcastrocouto/arkanoid';
       },
       credits: function(){
         alert([
@@ -863,7 +875,7 @@ var Game = function(){
             game.pad.speed = 100;
           break;
           default:
-            console.log(key)
+            //console.log(key)
           break;
         };
         return game.mode;
@@ -976,4 +988,3 @@ var Game = function(){
 };
 var arkanoid = new Game();
 arkanoid.game.init()
-
