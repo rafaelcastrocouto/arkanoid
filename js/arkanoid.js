@@ -64,7 +64,7 @@ var Game = function(){
           '.button': { 
             'height': game.px(70),
             'width': game.px(300),
-            'padding': game.px(15),
+            'pading': game.px(15),
             'font-size': game.px(32)
           },       
           '.shadow' : {
@@ -77,7 +77,7 @@ var Game = function(){
         game.stage.css();
         game.css.updateBlocks();
         game.css.updateBalls();
-        game.css.updatePadd();
+        game.css.updatePad();
         game.css.updateRules();
       },
       updateBlocks: function(){
@@ -96,10 +96,10 @@ var Game = function(){
           }  
         }       
       },
-      updatePadd: function(){
-        if(game.padd) {
-          var padd = game.padd;
-          if(padd && padd.el) game.padd.css(); 
+      updatePad: function(){
+        if(game.pad) {
+          var pad = game.pad;
+          if(pad && pad.el) game.pad.css(); 
         }   
       },
       updateRules: function(){
@@ -309,7 +309,7 @@ var Game = function(){
       game.stage.init();
       game.block.build(level);
       game.ball.build(level); 
-      game.padd.init(level);      
+      game.pad.init(level);      
       game.mode = 'ready'; 
     },
     nextLevel: function(){
@@ -350,7 +350,7 @@ var Game = function(){
         game.css.addRule('#ui',{
           'text-shadow': '0 0 '+ game.px(12) +' #ddf',
           'font-size': game.px(30),
-          'padding': game.px(6)
+          'pading': game.px(6)
         });
       }
     }, 
@@ -559,7 +559,7 @@ var Game = function(){
       launch: function(){
         if(game.mode == 'ready'){
           game.mode = 'playing'; 
-          game.ball.array[0].speed.x = game.padd.speed / 10;
+          game.ball.array[0].speed.x = game.pad.speed / 10;
           game.ball.array[0].speed.y = game.ball.speed;
           game.ball.move(); 
         }
@@ -580,9 +580,9 @@ var Game = function(){
           ball.el.style['bottom'] = game.px(o.y);
         }
       },
-      followPadd: function(){ 
-        var x = game.padd.x;
-        var offset = (game.padd.width / 2) - (game.ball.radius);
+      followPad: function(){ 
+        var x = game.pad.x;
+        var offset = (game.pad.width / 2) - (game.ball.radius);
         game.ball.array[0].x = x + offset;
         game.ball.array[0].el.style['left'] = game.px(x + offset)
       },
@@ -602,8 +602,8 @@ var Game = function(){
           if(ball.ny > game.stage.height - 30){  
             ball.speed.y *= -1;
           }
-          //hit padd
-          game.padd.checkCollision(ball);
+          //hit pad
+          game.pad.checkCollision(ball);
           //hit blocks
           game.block.checkCollision(ball);
 
@@ -630,7 +630,7 @@ var Game = function(){
         if(game.currentLifes == 1) game.css.paint('#a66');
         game.ui.update();
         game.ball.build(game.currentLevel);
-        game.padd.init();
+        game.pad.init();
         game.mode = 'ready';
       },
       css: function(ball){ 
@@ -644,93 +644,93 @@ var Game = function(){
 
     ///////////////////////////////PADD///////////////////////////////
 
-    padd: {
+    pad: {
       init: function(level){
-        if(!game.padd.el) game.padd.el = game.create('div', {
-          id: 'padd',
+        if(!game.pad.el) game.pad.el = game.create('div', {
+          id: 'pad',
           className: 'shadow'
         });
-        game.stage.add(game.padd.el);
-        game.padd.speed = 0;
-        game.padd.key = 0;
+        game.stage.add(game.pad.el);
+        game.pad.speed = 0;
+        game.pad.key = 0;
         switch(level) {
           case 0:
-            game.padd.setWidth(game.padd.width);
+            game.pad.setWidth(game.pad.width);
           break; 
           case 1:
-            game.padd.setWidth(120);
+            game.pad.setWidth(120);
           break;          
           case 2:
-            game.padd.setWidth(100);
+            game.pad.setWidth(100);
           break;
         }
-        game.padd.css();
-        game.padd.position();
+        game.pad.css();
+        game.pad.position();
       },
       position: function(){
-        var x = (game.width / 2) - (game.padd.width / 2);
-        game.padd.x = game.round(game.convert * x);
-        game.padd.el.style['left'] = game.px(x);
+        var x = (game.width / 2) - (game.pad.width / 2);
+        game.pad.x = game.round(game.convert * x);
+        game.pad.el.style['left'] = game.px(x);
       },      
       inLimit: function(x){
         if(x < 0) x = 0;
-        var offset = (game.stage.el.offsetWidth - game.padd.el.offsetWidth) / game.convert;
+        var offset = (game.stage.el.offsetWidth - game.pad.el.offsetWidth) / game.convert;
         if(x > offset) x = offset;
         return x;
       },
       keyboardMove: function(k){
-        game.padd.key = k;
-        var x = game.padd.x + 15 * k;
-        game.padd.x = game.padd.inLimit(x);
+        game.pad.key = k;
+        var x = game.pad.x + 15 * k;
+        game.pad.x = game.pad.inLimit(x);
       },
       mouseMove: function(mx){
-        var offset = (game.container.el.offsetLeft + game.stage.el.offsetLeft + (game.padd.el.offsetWidth / 2)) / game.convert;
+        var offset = (game.container.el.offsetLeft + game.stage.el.offsetLeft + (game.pad.el.offsetWidth / 2)) / game.convert;
         var x = mx - offset;
-        game.padd.moveTo(game.padd.inLimit(x));
+        game.pad.moveTo(game.pad.inLimit(x));
       },
       moveTo: function(x){ 
-        var s = x - game.padd.x;
+        var s = x - game.pad.x;
         if(s > 100) s = 100;
         if(s < -100) s = -100;
-        game.padd.speed = s;
-        game.padd.x = x;
-        game.padd.el.style['left'] = game.px(x);       
+        game.pad.speed = s;
+        game.pad.x = x;
+        game.pad.el.style['left'] = game.px(x);       
       },
       setWidth: function(w){
-        game.padd.width = w;
-        game.padd.el.style['width'] = game.px(w);        
+        game.pad.width = w;
+        game.pad.el.style['width'] = game.px(w);        
       },
       checkCollision: function(ball){
-        if(game.collision(ball, game.padd)){ 
+        if(game.collision(ball, game.pad)){ 
           game.audio.hit.play();
-          //hit padd sides
-          if(ball.y < game.padd.y + game.padd.height){
-            if((ball.speed.x > 0 && game.padd.speed < 0)
-            || (ball.speed.x < 0 && game.padd.speed > 0)){
+          //hit pad sides
+          if(ball.y < game.pad.y + game.pad.height){
+            if((ball.speed.x > 0 && game.pad.speed < 0)
+            || (ball.speed.x < 0 && game.pad.speed > 0)){
               ball.speed.x *= -1;  
             } else {
               ball.speed.x *= 2;
             }
-          } else { //hit padd top
-            var dx = ball.x + ball.radius - game.padd.x - (game.padd.width / 2);
+          } else { //hit pad top
+            var dx = ball.x + ball.radius - game.pad.x - (game.pad.width / 2);
             ball.speed.x += dx / 40
           }
           ball.speed.y *= -1 * game.ball.acceleration;
         }
       },
       css: function(){ 
-        game.padd.height = 20;
-        game.padd.width = 140;
-        game.padd.y = 10;
+        game.pad.height = 20;
+        game.pad.width = 140;
+        game.pad.y = 10;
 
-        game.padd.el.style['width'] = game.px(game.padd.width);
-        game.padd.el.style['left'] =  game.px(game.padd.x);
+        game.pad.el.style['width'] = game.px(game.pad.width);
+        game.pad.el.style['left'] =  game.px(game.pad.x);
 
-        game.css.addRule('#padd', {
+        game.css.addRule('#pad', {
           'background': '#789',
           'border-radius':  '50% 50% 0 0',
-          'height': game.px(game.padd.height),
-          'bottom': game.px(game.padd.y)
+          'height': game.px(game.pad.height),
+          'bottom': game.px(game.pad.y)
         }); 
       }
     },    
@@ -789,8 +789,8 @@ var Game = function(){
         var isReady = (game.mode == 'ready');
         var isPlaying = (isReady || game.mode == 'playing');        
         if(isPlaying){
-          game.padd.mouseMove(e.clientX / game.convert);
-          if(isReady) game.ball.followPadd();
+          game.pad.mouseMove(e.clientX / game.convert);
+          if(isReady) game.ball.followPad();
         }
       }  
     },
@@ -815,8 +815,8 @@ var Game = function(){
         if(isPlaying){
           var e = game.touches[0];
           if(e && e.clientX){
-            game.padd.mouseMove(e.clientX / game.convert);
-            if(isReady) game.ball.followPadd();
+            game.pad.mouseMove(e.clientX / game.convert);
+            if(isReady) game.ball.followPad();
           }
         }
         game.loop(game.touch.loop);
@@ -853,14 +853,14 @@ var Game = function(){
           case 37: // Left arrow
           case 65: // A
             game.noDefault(e);
-            game.padd.key = -1;
-            game.padd.speed = -100; 
+            game.pad.key = -1;
+            game.pad.speed = -100; 
           break;
           case 39: // Right arrow
           case 68: // D
             game.noDefault(e);
-            game.padd.key = 1; 
-            game.padd.speed = 100;
+            game.pad.key = 1; 
+            game.pad.speed = 100;
           break;
           default:
             console.log(key)
@@ -876,8 +876,8 @@ var Game = function(){
           case 39: // Right arrow
           case 68: // D
             game.noDefault(e); 
-            game.padd.key = 0;
-            game.padd.speed = 0;
+            game.pad.key = 0;
+            game.pad.speed = 0;
           break;          
         }
       },
@@ -886,12 +886,12 @@ var Game = function(){
         var isPlaying = (isReady || game.mode == 'playing');
         game.keyboard.delay = 0;
         while ((new Date).getTime() > game.date) { 
-          if(game.padd.key && isPlaying) game.padd.keyboardMove(game.padd.key);
+          if(game.pad.key && isPlaying) game.pad.keyboardMove(game.pad.key);
           game.date += game.rate;
           ++game.keyboard.delay;
         } 
-        if(game.padd.key && game.keyboard.delay && isPlaying) game.padd.el.style['left'] = game.px(game.padd.x); 
-        if(game.padd.key && isReady) game.ball.followPadd(); 
+        if(game.pad.key && game.keyboard.delay && isPlaying) game.pad.el.style['left'] = game.px(game.pad.x); 
+        if(game.pad.key && isReady) game.ball.followPad(); 
         game.loop(game.keyboard.loop)
       } 
     },  
