@@ -846,7 +846,7 @@ var Game = function(){
         window.on('gesturemoveend', game.touch.move);
       },
       move: function(e){
-        e.preventDefault();
+        //e.preventDefault();
         game.touchable = 1;
         game.touches = e.touches;
       }
