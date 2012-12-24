@@ -768,7 +768,7 @@ var Game = function(){
         document.body.on = on;
         game.css.events();
         game.mouse.events();
-        //game.touch.events();
+        game.touch.events();
         game.keyboard.events();
       }
     },
@@ -810,9 +810,16 @@ var Game = function(){
         game.touch.loop();
       },
       loop: function(){
-        if(game.touches[0] && game.touches[0].clientX) 
-          game.padd.moveTo(game.touches[0].clientX);
-          game.loop(game.touch.loop);
+        var isReady = (game.mode == 'ready');
+        var isPlaying = (isReady || game.mode == 'playing');
+        if(isPlaying){
+          var e = game.touches[0];
+          if(e && e.clientX){
+            game.padd.mouseMove(e.clientX / game.convert);
+            if(isReady) game.ball.followPadd();
+          }
+        }
+        game.loop(game.touch.loop);
       },
       move: function(e){
         e.preventDefault();
@@ -969,5 +976,4 @@ var Game = function(){
 };
 var arkanoid = new Game();
 arkanoid.game.init()
-
 
