@@ -328,7 +328,7 @@ var Game = function(){
       if(game.currentLevel == game.level.length) game.win();
       else game.loadLevel(game.currentLevel);
     }, 
-    level: [ //upside down
+    level: [ 
       /*0*/ ['brick','plast','plast','brick','plast','brick','plast','plast','brick',
              'plast','plast','stone','brick','plast','brick','stone','plast','plast'],
 
@@ -474,7 +474,7 @@ var Game = function(){
         game.block.height = 45;    
 
         block.x = (x * (game.block.width + p)) + p;
-        block.y = ((y * (game.block.height + p)) + p) + 560;
+        block.y = (game.stage.height - game.block.height) - ((y * (game.block.height + p)) + p);
         block.width = game.block.width;
         block.height = game.block.height;
 
@@ -790,15 +790,7 @@ var Game = function(){
         var isPlaying = (isReady || game.mode == 'playing');
         game.events.delay = 0;
         while ((new Date).getTime() > game.date) { 
-          if(isPlaying){
-            //keyboard
-            if(game.pad.key) game.pad.keyboardMove(game.pad.key);
-            //touch
-            //var e = game.touches[0];
-            //if(e && e.clientX){
-            //  game.pad.touchMove(e.clientX / game.convert);
-            //}
-          }
+          if(isPlaying && game.pad.key) game.pad.keyboardMove(game.pad.key);
           game.date += game.rate;
           ++game.events.delay;
         } 
@@ -843,7 +835,6 @@ var Game = function(){
         window.on('touchend', game.touch.move);
       },
       move: function(e){
-        //e.preventDefault();
         game.touches = e.changedTouches;
         for (var i=0; i < game.touches.length; i++) {
           game.pad.mouseMove(game.touches[i].pageX / game.convert);
