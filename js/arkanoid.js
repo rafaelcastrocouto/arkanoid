@@ -370,19 +370,19 @@ var Game = function(){
       init: function(){
         game.score.scoreboard = [];
         try { game.score.scoreboard = JSON.parse(localStorage.getItem('scoreboard')) }
-        catch(e) { console.log('No score detected.') }
-        if(game.score.scoreboard){
-          if(game.score.scoreboard.length){
-            game.score.enable();
-          }
+        catch(e) { /*console.log('No score detected.'+e)*/ }
+        if(game.score.scoreboard && game.score.scoreboard.length){
+          game.score.enable();
         } else game.score.scoreboard = [];
       },
       save: function(){
-        localStorage.setItem('scoreboard', JSON.stringify(game.score.scoreboard));
+        try { localStorage.setItem('scoreboard', JSON.stringify(game.score.scoreboard)) }
+        catch(e) { /*console.log('Not able to save score.'+e)*/ }
       },
       set: function(name, score){
         game.score.scoreboard.push({name: name, score: score});
-        localStorage.setItem('scoreboard', JSON.stringify(game.score.scoreboard));
+        try { localStorage.setItem('scoreboard', JSON.stringify(game.score.scoreboard)) }
+        catch(e) { /*console.log('Not able to save score.'+e)*/ }
         game.score.enable();
       },
       enable: function(){
@@ -938,10 +938,7 @@ var Game = function(){
         var l = game.audio.list;
         for (var i = 0; i < l.length; i++) {
           var name = l[i];
-          
-          if(window.location.host == "rafaelcastrocouto.jsapp.us") game.audio[name] = game.create('audio', {src: 'http://sites.google.com/site/rafaelcastrocouto/download/arkanoid/'+ name +'.wav'});
-          else game.audio[name] = game.create('audio', {src: 'audio/'+ name +'.wav'});
-
+          game.audio[name] = game.create('audio', {src: 'audio/'+ name +'.wav'});
           game.add(game.audio[name]);          
         };
       }
