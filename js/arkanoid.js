@@ -576,9 +576,12 @@ var Game = function(){
       setRadius: function(r, ball){
         if(!ball) ball = game.ball.array[0];
         if(!r) r = game.ball.radius;
-        ball.radius = r;
-        ball.el.style['width'] = game.px(2 * r);        
-        ball.el.style['height'] = game.px(2 * r);   
+        ball.radius = r; 
+        game.css.addRule('#'+ball.el.id, {
+          'border-radius': game.px(r),
+          'width': game.px(2 * r),
+          'height': game.px(2 * r)
+        })      
       },
       moveTo: function(o, ball){
         if(!ball) ball = game.ball.array[0];
@@ -645,9 +648,12 @@ var Game = function(){
       css: function(ball){ 
         ball.el.style['bottom'] = game.px(ball.y);
         ball.el.style['left'] = game.px(ball.x);
-        ball.el.style['width'] = game.px(ball.radius * 2);
-        ball.el.style['height'] = game.px(ball.radius * 2); 
-        ball.el.style['border-radius'] = game.px(ball.radius);             
+        var r = ball.radius;
+        game.css.addRule('#'+ball.el.id, {
+          'border-radius': game.px(r),
+          'width': game.px(2 * r),
+          'height': game.px(2 * r)
+        })             
       }
     },
 
@@ -817,7 +823,7 @@ var Game = function(){
         document.onselectstart = function(){return false};
         document.oncontextmenu = function(){return false};
       },
-      click: function(e){ console.log('click')
+      click: function(e){ 
         game.ball.launch(); 
       },      
       move: function(e){  
