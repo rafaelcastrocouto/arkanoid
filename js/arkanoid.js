@@ -648,7 +648,7 @@ var Game = function(){
         ball.el.style['width'] = game.px(ball.radius * 2);
         ball.el.style['height'] = game.px(ball.radius * 2); 
         ball.el.style['border-radius'] = game.px(ball.radius);             
-      },
+      }
     },
 
     ///////////////////////////////PADD///////////////////////////////
