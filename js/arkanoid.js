@@ -770,10 +770,10 @@ var Game = function(){
       init: function(){
         var on;
         if(window.attachEvent) {
-          on = function(evt, f){ this.attachEvent(evt, f) }
+          on = function(evt, f){ this.attachEvent('on'+evt, f) }
         } else if(window.addEventListener) {
           on = function(evt, f){ this.addEventListener(evt, f) }
-        } else on = function(evt, f){ this['on'+s] = f };
+        } else on = function(evt, f){ this['on'+evt] = f };
         game.on = on;
         window.on = on;
         document.on = on;
