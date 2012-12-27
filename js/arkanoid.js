@@ -149,6 +149,8 @@ var Game = function(){
         var color2 = '#' + c.r.toString(16) + c.g.toString(16) + c.b.toString(16);
         var bkg = [ color,
         '-webkit-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
+        '-o-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
+        '-ms-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
         '-moz-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)'];
         return bkg;
       }
