@@ -271,15 +271,15 @@ var Game = function(){
 
       ///////////////////////////////BUTTON EVENTS///////////////////////////////
 
-      newGame: function(e){ 
-        game.noDefault(e);
+      newGame: function(e){
+        game.events.noDefault(e); 
         game.currentScore = 0;
         game.currentLifes = 2;
         game.currentLevel = 0;
         game.loadLevel(game.currentLevel);
       },   
       loadGame: function(e){
-        game.noDefault(e);
+        game.events.noDefault(e); 
         var level = prompt('Select Level:');
         level = parseInt(level);
         if(!isNaN(level) && level > 0 && level < game.level.length){
@@ -799,19 +799,25 @@ var Game = function(){
         }
         if(isReady) game.ball.followPad(); 
         game.loop(game.events.loop)
-      } 
+      },
+      noDefault: function(event){
+        if(event.stopPropagation) event.stopPropagation();
+        if(event.preventDefault) event.preventDefault();
+        event.returnValue = false;  
+        event.cancelBubble=true;  
+      }
     },
 
     ///////////////////////////////MOUSE///////////////////////////////
 
     mouse: {
       events: function(){
-        window.on('mousemove', game.mouse.move);
-        window.on('click', game.mouse.click);
-        window.on('dblclick', function(){return false});
+        document.on('mousemove', game.mouse.move);
+        document.on('click', game.mouse.click);
+        document.onselectstart = function(){return false};
+        document.oncontextmenu = function(){return false};
       },
-      click: function(e){ 
-        game.noDefault(e);
+      click: function(e){ console.log('click')
         game.ball.launch(); 
       },      
       move: function(e){  
@@ -847,7 +853,6 @@ var Game = function(){
 
     keyboard: {
       events: function(){
-        window.on('selectstart', function(){return false});
         window.on('keydown', game.keyboard.down);
         window.on('keyup', game.keyboard.up);
       },    
@@ -855,22 +860,18 @@ var Game = function(){
         var key = e.which || e.keyCode;
         switch (key) { 
           case 80: // P
-            game.noDefault(e);
             game.pause();
           break;
           case 32: // Space
-            game.noDefault(e);
             game.ball.launch(game.ball.first);
           break;
           case 37: // Left arrow
           case 65: // A
-            game.noDefault(e);
             game.pad.key = -1;
             game.pad.speed = -100; 
           break;
           case 39: // Right arrow
           case 68: // D
-            game.noDefault(e);
             game.pad.key = 1; 
             game.pad.speed = 100;
           break;
@@ -878,7 +879,6 @@ var Game = function(){
             //console.log(key)
           break;
         };
-        return game.mode;
       },
       up: function(e){
         var key = e.which || e.keyCode;
@@ -886,8 +886,7 @@ var Game = function(){
           case 37: // Left arrow
           case 65: // A          
           case 39: // Right arrow
-          case 68: // D
-            game.noDefault(e); 
+          case 68: // D            
             game.pad.key = 0;
             game.pad.speed = 0;
           break;          
@@ -907,11 +906,6 @@ var Game = function(){
         game.css.paint('#bbb');
       }
     },    
-
-    noDefault: function(event){
-      event.stopPropagation();
-      event.preventDefault();
-    },
 
     ///////////////////////////////LOOP///////////////////////////////
 

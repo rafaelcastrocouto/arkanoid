@@ -3,6 +3,9 @@ html, body {
   height: 100%;
   margin: 0;
   overflow: hidden;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 div{
   position: absolute;
