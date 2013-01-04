@@ -4,6 +4,6 @@ Arkanoid
 =======
 A JavaScript 2D game for HTML5 browsers.
 
-### [Help](wiki/Home)
+### [Help](arkanoid/wiki)
 
 Please gimme some feedback!
