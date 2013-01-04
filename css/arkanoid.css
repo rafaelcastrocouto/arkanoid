@@ -10,16 +10,17 @@ html, body {
 div{
   position: absolute;
 }
-.button{
+.button, .power{
   font-family: 'Pixel';
-  text-align: center;
-  height: 20%;
+  color: #111;
   width: 100%;
   margin: 0;
+  text-align: center;
 }
 #ui{
   font-family: 'Digital';
   color: #fff;
   width: 100%;
+  margin: 0;
   text-align: center;
 }
