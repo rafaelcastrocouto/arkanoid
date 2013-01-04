@@ -880,10 +880,10 @@ var Game = function(){
           if(game.audio.enabled) game.audio.power.play();
           switch(power.type) {
             case 'increase':
-              game.pad.setWidth(game.pad.width + 15);
+              game.pad.setWidth(game.pad.width + 25);
             break;
             case 'decrease':
-              game.pad.setWidth(game.pad.width - 15);
+              game.pad.setWidth(game.pad.width - 25);
             break;
           };          
         }

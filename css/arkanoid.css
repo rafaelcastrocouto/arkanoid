@@ -28,24 +28,24 @@ div{
 /*///////////ANIMATION////////////*/
 
 @keyframes rotateLoop {
-  from { transform: perspective(200px) rotateY(0); }
-  to   { transform: perspective(200px) rotateY(180deg); }
+  from { transform: perspective(50px) rotateY(0); }
+  to   { transform: perspective(50px) rotateY(180deg); }
 }
 @-webkit-keyframes rotateLoop {
-  from { -webkit-transform: perspective(200px) rotateY(0); }
-  to   { -webkit-transform: perspective(200px) rotateY(180deg); }
+  from { -webkit-transform: perspective(50px) rotateY(0); }
+  to   { -webkit-transform: perspective(50px) rotateY(180deg); }
 }
 @-moz-keyframes rotateLoop {
-  from { -moz-transform: perspective(200px) rotateY(0); }
+  from { -moz-transform: perspective(50px) rotateY(0); }
   to   { -moz-transform: perspective(200px) rotateY(180deg); }
 }
 @-o-keyframes rotateLoop {
-  from { -o-transform: perspective(200px) rotateY(0); }
-  to   { -o-transform: perspective(200px) rotateY(180deg); }
+  from { -o-transform: perspective(50px) rotateY(0); }
+  to   { -o-transform: perspective(50px) rotateY(180deg); }
 }
 .power{
-  animation: rotateLoop 1s infinite linear;
-  -webkit-animation: rotateLoop 1s infinite linear;
-  -moz-animation: rotateLoop 1s infinite linear;
-  -o-animation: rotateLoop 1s infinite linear;
+  animation: rotateLoop 0.5s infinite linear;
+  -webkit-animation: rotateLoop 0.5s infinite linear;
+  -moz-animation: rotateLoop 0.5s infinite linear;
+  -o-animation: rotateLoop 0.5s infinite linear;
 }
