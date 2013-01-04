@@ -24,3 +24,28 @@ div{
   margin: 0;
   text-align: center;
 }
+
+/*///////////ANIMATION////////////*/
+
+@keyframes rotateLoop {
+  from { transform: perspective(200px) rotateY(0); }
+  to   { transform: perspective(200px) rotateY(180deg); }
+}
+@-webkit-keyframes rotateLoop {
+  from { -webkit-transform: perspective(200px) rotateY(0); }
+  to   { -webkit-transform: perspective(200px) rotateY(180deg); }
+}
+@-moz-keyframes rotateLoop {
+  from { -moz-transform: perspective(200px) rotateY(0); }
+  to   { -moz-transform: perspective(200px) rotateY(180deg); }
+}
+@-o-keyframes rotateLoop {
+  from { -o-transform: perspective(200px) rotateY(0); }
+  to   { -o-transform: perspective(200px) rotateY(180deg); }
+}
+.power{
+  animation: rotateLoop 1s infinite linear;
+  -webkit-animation: rotateLoop 1s infinite linear;
+  -moz-animation: rotateLoop 1s infinite linear;
+  -o-animation: rotateLoop 1s infinite linear;
+}
