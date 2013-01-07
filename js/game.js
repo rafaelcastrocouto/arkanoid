@@ -55,10 +55,11 @@ var Game = function(){
         game.width = game.properties.width;
         game.height = game.properties.height;  
         game.css.paint('#bbb');
-        var el = game.create('style',{id: 'css'}); 
+        var el = game.create('style',{id: 'rules'}); 
         game.add(el);
         game.css.el = el;
         game.css.resize();
+        game.css.font();
       },
       events: function(){
         window.on('orientationchange', game.css.resize);
@@ -179,6 +180,25 @@ var Game = function(){
         '-ms-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
         '-moz-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)'];
         return bkg;
+      },
+      font: function() {
+        var el = game.create('style',{id: 'font'}); 
+        game.add(el);
+        game.css.font.el = el;        
+        var css = [];
+        for(f in game.properties.fonts){
+          var font = game.properties.fonts[f];
+          var str = [
+            '@font-face{', 
+            '  font-family: \''+ font + '\';',
+            '  src: url(\'font/'+font+'.eot\' ),',
+            '       url(\'font/'+font+'.ttf\' ),',
+            '       url(\'font/'+font+'.woff\');',
+            '}'
+          ];
+          css.push(str.join('\n'));
+        }
+        game.css.font.el.textContent = css.join('\n');
       }
     },
 
@@ -655,6 +675,7 @@ var Game = function(){
           if (ball.y < 0) {
             ball.i = b;
             game.ball.end(ball);
+            game.power.clear();
           }
           //keep moving
           else {
@@ -791,7 +812,7 @@ var Game = function(){
     power: {
       radius: 20,
       speed: 3,
-      types: ['increase', 'decrease'],
+      types: ['increase', 'decrease', 'fast', 'slow'],
       array: [],
       init: function(id, radius){
         if(!id) id = 0;
@@ -815,12 +836,20 @@ var Game = function(){
         switch(type) {
           case 'increase':
             game.css.paint('#28d', power);
-            power.el.textContent = '+';
+            power.el.textContent = '<>';
           break;  
           case 'decrease':
             game.css.paint('#d82', power);
-            power.el.textContent = '-';
+            power.el.textContent = '><';
           break;
+          case 'fast':
+            game.css.paint('#d82', power);
+            power.el.textContent = '+';
+          break;     
+          case 'slow':
+            game.css.paint('#28d', power);
+            power.el.textContent = '-';
+          break;     
         };
         game.power.css(power);
         return power;
@@ -828,12 +857,17 @@ var Game = function(){
       end: function(power){
         game.stage.el.removeChild(power.el);
         game.power.array.splice(power.i, 1);
-      },   
+      }, 
+      clear: function(){
+        while(game.power.array.length){
+          var power = game.power.array[0];
+          power.i = 0;
+          game.power.end(power);
+        }
+      },  
       launch: function(block){
-        var r = Math.random(); 
-        if(r < game.properties.drop) { 
-          r = Math.random();
-          var t = ~~(r * game.power.types.length);
+        if(Math.random() < game.properties.drop) { 
+          var t = ~~(Math.random() * game.power.types.length);
           var power = game.power.build(game.power.types[t]); 
           o = {
             x: block.x + (block.width / 2) - (power.radius / 2),
@@ -885,6 +919,22 @@ var Game = function(){
             case 'decrease':
               game.pad.setWidth(game.pad.width - 25);
             break;
+            case 'fast':
+              for(b in game.ball.array){
+                var ball = game.ball.array[b];
+                ball.speed.x *= 1.25;
+                ball.speed.y *= 1.25;
+                game.ball.array[b] = ball;
+              }
+            break;
+            case 'slow':
+              for(b in game.ball.array){
+                var ball = game.ball.array[b];
+                if(ball.speed.x > 2) ball.speed.x *= 0.7;
+                if(ball.speed.y > 2) ball.speed.y *= 0.7;
+                game.ball.array[b] = ball;
+              }
+            break;
           };          
         }
       },
@@ -893,11 +943,10 @@ var Game = function(){
         power.el.style['left'] = game.px(power.x);
         var r = power.radius;
         game.css.addRule('#'+power.el.id, {
-          'line-height': game.px(1.65 * r),
-          'padding-left': game.px(0.25 * r),
-          'font-size': game.px(2 * r),
+          'line-height': game.px(2 * r),
+          'font-size': game.px(1.2 * r),
           'border-radius': game.px(r),
-          'width': game.px(1.75 * r),
+          'width': game.px(2 * r),
           'height': game.px(2 * r)
         })             
       }
@@ -1086,12 +1135,22 @@ var Game = function(){
     audio: {
       init: function(){
         var a = game.create('audio');
-        game.audio.enabled = !!(a.canPlayType && a.canPlayType('audio/wav; codecs="1"').replace(/no/, ''));        
-        if(game.audio.enabled){
+        if(!a.canPlayType) game.audio.enabled = false;
+        else {
+          if(a.canPlayType('audio/wav;').replace(/no/, '')) {
+            game.audio.enabled = true;
+            game.audio.format = 'wav';
+          }
+          if(a.canPlayType('audio/mpeg;').replace(/no/, '')) {
+            game.audio.enabled = true;
+            game.audio.format = 'mp3';
+          }
+        }
+        if(game.audio.enabled && game.audio.format){
           var l = game.properties.audio;
           for (var i = 0; i < l.length; i++) {
             var name = l[i];
-            game.audio[name] = game.create('audio', {src: 'audio/'+ name +'.wav'});
+            game.audio[name] = game.create('audio', {src: 'audio/'+ name +'.'+game.audio.format});
             game.add(game.audio[name]);          
           }
         }

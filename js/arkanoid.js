@@ -6,6 +6,7 @@ arkanoid.game.properties = {
   height: 750,
   drop:  0.25,
   audio: [ 'hit', 'destroy', 'power', 'pad' ],
+  fonts: ['segment', 'pixel', 'entypo'],
   blocks: {
     'metal': {
       life: 0, //unbreakable

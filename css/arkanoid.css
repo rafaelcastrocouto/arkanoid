@@ -10,20 +10,20 @@ html, body {
 div{
   position: absolute;
 }
-.button, .power{
-  font-family: 'Pixel';
-  color: #111;
+#ui, .button, .power{
   width: 100%;
   margin: 0;
   text-align: center;
 }
 #ui{
-  font-family: 'Digital';
+  font-family: 'segment';
   color: #fff;
-  width: 100%;
-  margin: 0;
-  text-align: center;
 }
+.button, .power{
+  font-family: 'pixel';
+  color: #111;
+}
+
 
 /*///////////ANIMATION////////////*/
 
@@ -41,7 +41,7 @@ div{
 }
 @-o-keyframes rotateLoop {
   from { -o-transform: perspective(50px) rotateY(0); }
-  to   { -o-transform: perspective(50px) rotateY(180deg); }
+  to   { -o-transform: perspective(50px) rotateY(360deg); }
 }
 .power{
   animation: rotateLoop 0.5s infinite linear;
