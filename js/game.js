@@ -1056,10 +1056,10 @@ var Game = function(){
 
     keyboard: {
       events: function(){
-        window.on('keydown', game.keyboard.down);
-        window.on('keyup', game.keyboard.up);
+        window.document.on('keydown', game.keyboard.down);
+        window.document.on('keyup', game.keyboard.up);
       },    
-      down: function(e){
+      down: function(e){ console.log(e)
         var key = e.which || e.keyCode;
         switch (key) { 
           case 80: // P
