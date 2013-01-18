@@ -79,11 +79,8 @@ var Game = function(){
           width: window.innerWidth / game.convert
         }
         game.css.rules = {
-          '.button': { 
-            'font-size': game.px(32)
-          },       
           '.shadow' : {
-            'box-shadow': '0 0 ' + game.px(15) + ' black'
+            'box-shadow': '0px 0px ' + game.px(15) + ' black'
           }
         },
         game.container.css();
@@ -245,19 +242,63 @@ var Game = function(){
         game.changeMode('menu');
       },    
       css: function(){
-        game.menu.width = 320;
+        game.menu.width = 300;
         game.menu.height = 460;
         game.menu.left = (game.width / 2) - (game.menu.width / 2);
         game.menu.top = (game.height / 2) - (game.menu.height / 2);
+
+        var color1 = ' rgb(150, 150, 170)',
+            color2 = ' rgb(180, 180, 200)',
+            color3 = ' rgb(130, 130, 150)',
+            color4 = ' rgb(190, 190, 210)',
+            color5 = ' rgba( 0, 0, 0, 0.5)';
+
         game.css.addRule('#menu',{
           'width': game.px(game.menu.width),
           'height': game.px(game.menu.height),
           'left': game.px(game.menu.left),
           'top': game.px(game.menu.top)
         });
-        game.css.addRule('.button',{
-          'height': game.px(game.menu.height/game.menu.buttons.count)
+
+        game.css.addRule('.button[DISABLED]', {
+            'color': '#ccc',
+            'cursor': 'default'
         });
+
+        game.css.addRule('.button', {
+            'float': 'left',
+            'font': game.px(28) + '/' + game.px(30) + ' pixel',
+            'height': game.px(game.menu.height/game.menu.buttons.count - 10),
+            'margin':  game.px(5),
+            'color': 'white',
+            'text-shadow': ' 0px ' + game.px(-3) + color1 + ',' +
+                           ' 0px ' + game.px( 3) + color2 ,
+            'background-color': color2,
+            'box-shadow':  '0px ' + game.px(2)   + ' ' + game.px(6)  + color5 + ',' +
+                           '0px ' + game.px(-35) + ' ' + game.px(35) + color3 + ' inset,'+ 
+                           '0px ' + game.px(2)   + ' ' + game.px(6)  + ' white inset',
+            'border': game.px(4) + ' solid ' + color1 ,
+            'border-radius': game.px(12),
+            'padding': game.px(8) + ' ' + game.px(16),
+            'cursor': 'pointer'
+          });
+
+          game.css.addRule('.button:hover:not([DISABLED])', {
+            'background-color': color4,
+            'box-shadow': '0px ' + game.px(4)   +  ' ' + game.px(6)  + color5 + ',' +
+                          '0px ' + game.px(-30) +  ' ' + game.px(35) + color3 + ' inset,' +
+                          '0px ' + game.px(2)   +  ' ' + game.px(6)  + ' white inset',
+          });
+
+          game.css.addRule('.button:active:not([DISABLED])', {
+            'color': '#ddd',
+            'background-color': color4,
+            'box-shadow': '0px ' + game.px(-2) + ' ' + game.px(6)  + color5 + ',' +
+                          '0px ' + game.px(30) + ' ' + game.px(35) + color3 + ' inset,' +
+                          '0px         0px '         + game.px(2)  + ' white inset',
+            'text-shadow': ' 0px ' + game.px(-3) + color2 + ',' +
+                           ' 0px ' + game.px( 3) + color1 
+          });
       },
       add: function(el){
         game.menu.el.appendChild(el);
@@ -1059,7 +1100,7 @@ var Game = function(){
         window.document.on('keydown', game.keyboard.down);
         window.document.on('keyup', game.keyboard.up);
       },    
-      down: function(e){ console.log(e)
+      down: function(e){
         var key = e.which || e.keyCode;
         switch (key) { 
           case 80: // P
