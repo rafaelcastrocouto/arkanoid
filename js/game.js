@@ -163,7 +163,8 @@ var Game = function(){
           el = obj.el;
           w = obj.width || obj.radius;
         }
-        for(b in bkg) el.style.background = bkg[b]; 
+        //for(b in bkg) el.style.background = bkg[b]; 
+        el.style.background = color;
         var color2 = game.css.dark(color);
         var shadow = '0 0 ' + game.px(20) + ' black, 0 0 ' + game.px(w/2) + ' ' + color2 + ' inset';
         el.style['box-shadow'] = shadow;
