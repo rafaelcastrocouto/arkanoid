@@ -54,12 +54,12 @@ var Game = function(){
       init: function(){
         game.width = game.properties.width;
         game.height = game.properties.height;  
-        game.css.paint('#bbb');
         var el = game.create('style',{id: 'rules'}); 
         game.add(el);
         game.css.el = el;
         game.css.resize();
         game.css.font();
+        game.css.paint('#bbb');
       },
       events: function(){
         window.on('orientationchange', game.css.resize);
@@ -153,13 +153,23 @@ var Game = function(){
         };
       },
       paint: function(color, obj){ 
-        var el;
+        var el, w;
         var bkg = game.css.background(color);
-        if(!obj) el = document.body;
-        else if(obj.el) el = obj.el;
-        for(b in bkg) el.style.background = bkg[b];
+        if(!obj) {
+          el = document.body;
+          w = game.width;
+        }
+        else if(obj.el) {
+          el = obj.el;
+          w = obj.width || obj.radius;
+        }
+        for(b in bkg) el.style.background = bkg[b]; 
+        var color2 = game.css.dark(color);
+        var shadow = '0 0 ' + game.px(20) + ' black, 0 0 ' + game.px(w/2) + ' ' + color2 + ' inset';
+        el.style['box-shadow'] = shadow;
+        
       },
-      background: function(color, inv){
+      dark: function(color, inv){
         if(!inv) inv = 1;
         var c = {
           r: parseInt(color[1], 16) + (6 * -inv),
@@ -170,7 +180,11 @@ var Game = function(){
         if(c.g < 0) c.g = 0; if(c.g > 15) c.g = 15; 
         if(c.b < 0) c.b = 0; if(c.b > 15) c.b = 15;
 
-        var color2 = '#' + c.r.toString(16) + c.g.toString(16) + c.b.toString(16);
+        return '#' + c.r.toString(16) + c.g.toString(16) + c.b.toString(16);
+
+      },
+      background: function(color){
+        var color2 = game.css.dark(color);
         var bkg = [ color,
         '-webkit-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
         '-o-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
@@ -204,19 +218,18 @@ var Game = function(){
     container: {
       init: function(){
         game.container.el = game.create('div',{
-          id: 'container', 
-          className: 'shadow'
+          id: 'container'
         });
         game.add(game.container.el);  
         game.container.css();
+        game.css.paint('#69a', game.container);
       },
       css: function(){
         game.container.height = (game.height * 0.96);
         game.container.width = (game.width * 0.96);
         game.container.top = (game.window.height / 2) - (game.height * 0.95 / 2);
         game.container.left = (game.window.width / 2) - (game.width * 0.95 / 2);        
-        game.css.addRule('#container', {
-            'background': '#69a',
+        game.css.addRule('#container', {            
             'border-radius': game.px(5), 
             'height': game.px(game.container.height),
             'width': game.px(game.container.width),
@@ -514,7 +527,7 @@ var Game = function(){
         var block = {
           el: game.create('div', {
             id: 'block' + id,
-            className: 'block ' + className + ' shadow'
+            className: 'block ' + className
           }),
           i: id,
           hitCount: 0,
@@ -624,7 +637,7 @@ var Game = function(){
         var ball = {
           el : game.create('div', {
             id: 'ball' + id,
-            className: 'ball shadow'
+            className: 'ball'
           }),
           radius: radius,
           speed: {x: 0, y: 0},
@@ -755,15 +768,14 @@ var Game = function(){
     pad: {
       init: function(level){
         if(!game.pad.el) game.pad.el = game.create('div', {
-          id: 'pad',
-          className: 'shadow'
+          id: 'pad'
         });
         game.stage.add(game.pad.el);
         game.pad.speed = 0;
         game.pad.key = 0;
         switch(level) {
           case 0:
-            game.pad.setWidth(game.pad.width);
+            game.pad.setWidth(140);
           break; 
           case 1:
             game.pad.setWidth(120);
@@ -772,6 +784,7 @@ var Game = function(){
             game.pad.setWidth(100);
           break;
         }
+        game.css.paint('#789', game.pad); 
         game.pad.css();
         game.pad.position();
       },
@@ -840,7 +853,6 @@ var Game = function(){
         game.pad.el.style['left'] =  game.px(game.pad.x);
 
         game.css.addRule('#pad', {
-          'background': '#789',
           'border-radius':  '50% 50% 0 0',
           'height': game.px(game.pad.height),
           'bottom': game.px(game.pad.y)
