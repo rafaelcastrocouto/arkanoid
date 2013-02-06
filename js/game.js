@@ -269,20 +269,23 @@ var Game = function(){
 
         game.css.addRule('#menu',{
           'width': game.px(game.menu.width),
-          'height': game.px(game.menu.height),
           'left': game.px(game.menu.left),
           'top': game.px(game.menu.top)
         });
 
-        game.css.addRule('.button[DISABLED]', {
+        game.css.addRule('.button[DISABLED], .alertify-button[DISABLED]', {
             'color': '#ccc',
             'cursor': 'default'
         });
-
-        game.css.addRule('.button', {
-            'float': 'left',
+        game.css.addRule('.button',{
+          'float': 'left'
+        });
+        game.css.addRule('.alertify', {
+          'font': game.px(28)+'/'+game.px(36)+' "segment", sans-serif'
+        });
+        game.css.addRule('.button, .alertify-button', {
+            'outline': '0',
             'font': game.px(28) + '/' + game.px(30) + ' pixel',
-            'height': game.px(game.menu.height/game.menu.buttons.count - 10),
             'margin':  game.px(5),
             'color': 'white',
             'text-shadow': ' 0px ' + game.px(-3) + color1 + ',' +
@@ -293,18 +296,18 @@ var Game = function(){
                            '0px ' + game.px(2)   + ' ' + game.px(6)  + ' white inset',
             'border': game.px(4) + ' solid ' + color1 ,
             'border-radius': game.px(12),
-            'padding': game.px(8) + ' ' + game.px(16),
+            'padding': game.px(16) + ' ' + game.px(16),
             'cursor': 'pointer'
           });
 
-          game.css.addRule('.button:hover:not([DISABLED])', {
+          game.css.addRule('.button:hover:not([DISABLED]), .alertify-button:hover:not([DISABLED])', {
             'background-color': color4,
             'box-shadow': '0px ' + game.px(4)   +  ' ' + game.px(6)  + color5 + ',' +
                           '0px ' + game.px(-30) +  ' ' + game.px(35) + color3 + ' inset,' +
                           '0px ' + game.px(2)   +  ' ' + game.px(6)  + ' white inset',
           });
 
-          game.css.addRule('.button:active:not([DISABLED])', {
+          game.css.addRule('.button:active:not([DISABLED]), .alertify-button:active:not([DISABLED])', {
             'color': '#ddd',
             'background-color': color4,
             'box-shadow': '0px ' + game.px(-2) + ' ' + game.px(6)  + color5 + ',' +
@@ -325,7 +328,6 @@ var Game = function(){
         game.menu.buttons.credits();                    
       },
       buttons: {
-        count: 5,
         newGame: function(){
           var props = {
             id: 'newGame', 
@@ -389,7 +391,7 @@ var Game = function(){
       },   
       loadGame: function(e){
         game.events.noDefault(e); 
-        var level = prompt('Select Level:');
+        var level = game.ask('Select Level:', '1');
         level = parseInt(level);
         if(!isNaN(level) && level > 0 && level < game.level.length){
           game.currentLevel = level;
@@ -399,18 +401,13 @@ var Game = function(){
         }
       },
       highScore: function(){
-        var str = '', sb = game.score.scoreboard;
-        sb.sort(function(a, b){return b.score - a.score});
-        for (var i = 0; i < sb.length; i++) {
-          str += sb[i].name + ': ' + sb[i].score + '\n';
-        };
-        alert(str);
+        game.score.showHighScore();
       },
       github: function(){
         window.location = game.properties.github;
       },
       credits: function(){
-        alert(game.properties.credits.join('\n'))
+        alertify.alert(game.properties.credits.join('<br>'))
       }
     },
 
@@ -486,7 +483,16 @@ var Game = function(){
       enable: function(){
         game.menu.highScore.el.disabled = false;
         game.menu.highScore.el.on('click', game.menu.highScore);
-      } 
+      },
+      showHighScore: function(){
+        var str = 'RANK *PLAYER* SCORE<BR>', 
+            sb = game.score.scoreboard;
+        sb.sort(function(a, b){return b.score - a.score});
+        for (var i = 0; i < sb.length; i++) {
+          str += (i + 1 ) + ' *'+sb[i].name + '* ' + sb[i].score + '<br>';
+        };
+        alertify.alert(str);
+      }
     },  
 
     ///////////////////////////////STAGE///////////////////////////////
@@ -1213,24 +1219,32 @@ var Game = function(){
 
     ///////////////////////////////END///////////////////////////////
 
+    ask: function(str, default_str){
+      alertify.prompt(str, 
+        function(e, name){ 
+          if(e) {
+            game.end(name);
+          }
+        }, default_str
+      );      
+    },
     win: function(){
       game.css.paint('288');
       game.ui.el.textContent = '* YOU WIN *';
-      var name = prompt('You Win!\nScore: ' + game.currentScore + '\nEnter your name:');
-      game.end(name);
+      game.changeMode('menu');
+      game.ask('You Win!<br>*Score* ' + game.currentScore + '<br>Enter your name', 'Anonymous');
     },
     over: function(){
       game.css.paint('#d22');
       game.ui.el.textContent = '* GAME OVER *';
-      var name = prompt('Game Over!\nScore: ' + game.currentScore + '\nEnter your name:');
-      game.end(name);
+      game.changeMode('menu');
+      game.ask('Game Over!<br>*Score* ' + game.currentScore + '<br>Enter your name', 'Anonymous');
     },
     end: function(name){
       if(!name) name = 'Anonymous';
       game.score.set(name, game.currentScore);
       game.ui.el.style['display'] = 'none';
       game.stage.el.style['display'] = 'none';
-      game.changeMode('menu');
       game.currentLevel = 0;   
       game.css.paint('#bbb');
       game.css.paint('#69a', game.container);

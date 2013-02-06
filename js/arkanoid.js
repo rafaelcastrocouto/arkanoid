@@ -40,10 +40,10 @@ arkanoid.game.properties = {
   ],
   github: 'https://github.com/rafaelcastrocouto/arkanoid',
   credits: [
-    'Author:  rafaelcastrocouto',
-    'Sounds:  soundjax.com',
-    'Fonts:  fontsquirrel.com',
-    'Host:  github.com'
+    '*Author*  <a target="" href="http://rafaelcastrocouto.jsapp.us">rafaelcastrocouto</a>',
+    '*Sounds*  <a target="" href="http://soundjax.com">soundjax.com</a>',
+    '*Fonts*  <a target="" href="http://fontsquirrel.com">fontsquirrel.com</a>',
+    '*Host*  <a target="" href="http://github.com">github.com</a>'
   ]
 }
 

@@ -7,7 +7,7 @@ html, body {
   -moz-user-select: none;
   -webkit-user-select: none;
 }
-div{
+#container, #container div{
   position: absolute;
 }
 #ui, .button, .power{
