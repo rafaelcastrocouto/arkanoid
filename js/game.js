@@ -163,12 +163,10 @@ var Game = function(){
           el = obj.el;
           w = obj.width || obj.radius;
         }
-        //for(b in bkg) el.style.background = bkg[b]; 
-        el.style.background = color;
+        el.style['background'] = color;
+        el.style['box-shadow'] = '0 0 '+game.px(10)+' black';
         var color2 = game.css.dark(color);
-        var shadow = '0 0 ' + game.px(20) + ' black, 0 0 ' + game.px(w/2) + ' ' + color2 + ' inset';
-        el.style['box-shadow'] = shadow;
-        
+        el.style['background-image'] = '-webkit-radial-gradient(center, ellipse cover, '+color+' 50%,'+color2+' 100%)';
       },
       dark: function(color, inv){
         if(!inv) inv = 1;
@@ -186,11 +184,10 @@ var Game = function(){
       },
       background: function(color){
         var color2 = game.css.dark(color);
-        var bkg = [ color,
-        '-webkit-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
-        '-o-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
-        '-ms-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)',
-        '-moz-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)'];
+        var bkg = [ 
+          color, 
+          '-webkit-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)'
+        ];
         return bkg;
       },
       font: function() {
@@ -452,7 +449,7 @@ var Game = function(){
       },
       css: function(){
         game.css.addRule('#ui',{
-          'text-shadow': '0 0 '+ game.px(12) +' #ddf',
+          'text-shadow': '0 0 '+ game.px(7) +' #fff',
           'font-size': game.px(30),
           'padding': game.px(6)
         });
