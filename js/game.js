@@ -1219,8 +1219,10 @@ var Game = function(){
     ask: function(str, default_str){
       alertify.prompt(str, 
         function(e, name){ 
-          if(e) {
+          if(e && name) {
             game.end(name);
+          } else {
+            game.end();
           }
         }, default_str
       );      
