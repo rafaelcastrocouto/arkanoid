@@ -48,6 +48,8 @@ arkanoid.game.properties = {
     '*Sounds*  <a target="" href="http://soundjax.com">soundjax.com</a>',
     '*Fonts*  <a target="" href="http://fontsquirrel.com">fontsquirrel.com</a>',
     '*Host*  <a target="" href="http://github.com">github.com</a>'
+    '*Breakout*  <a target="" href="http://www.atari.com/">Atari</a>'
+    '*Alertfy*  <a target="" href="https://twitter.com/fabien_doiron">Fabien Doiron</a>'
   ]
 }
 
