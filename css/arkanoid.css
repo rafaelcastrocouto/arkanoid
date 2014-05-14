@@ -4,8 +4,16 @@ html, body {
   margin: 0;
   overflow: hidden;
   user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
+}
+#intro {
+  text-align: center;
+  font-family: 'segment';
+/*  color: #fff;*/
+  color: transparent;  
+}
+#intro span {
+  display: inline-block;
+  /*animation in js to control duration*/
 }
 #container, #container div{
   position: absolute;
@@ -22,30 +30,29 @@ html, body {
 .power{
   font-family: 'pixel';
   color: #111;
+  animation: rotateLoop 0.5s infinite linear;
 }
 
+/*///////////ANIMATIONS////////////*/
 
-/*///////////ANIMATION////////////*/
+@keyframes intro {
+  0% { 
+    text-shadow: 0 0 55px white, 0 0 99px white; 
+    transform: scaleX(0);
+  }
+  50%, 80% { 
+    text-shadow: 0 0 0 white, 0 0 0 white; 
+    transform: scaleX(1);
+  }
+  100% { 
+    text-shadow: 0 0 99px white, 0 0 999px white; 
+    transform: scaleX(1);
+  }
+}
 
 @keyframes rotateLoop {
   from { transform: perspective(50px) rotateY(0); }
   to   { transform: perspective(50px) rotateY(180deg); }
 }
-@-webkit-keyframes rotateLoop {
-  from { -webkit-transform: perspective(50px) rotateY(0); }
-  to   { -webkit-transform: perspective(50px) rotateY(180deg); }
-}
-@-moz-keyframes rotateLoop {
-  from { -moz-transform: perspective(50px) rotateY(0); }
-  to   { -moz-transform: perspective(200px) rotateY(180deg); }
-}
-@-o-keyframes rotateLoop {
-  from { -o-transform: perspective(50px) rotateY(0); }
-  to   { -o-transform: perspective(50px) rotateY(360deg); }
-}
-.power{
-  animation: rotateLoop 0.5s infinite linear;
-  -webkit-animation: rotateLoop 0.5s infinite linear;
-  -moz-animation: rotateLoop 0.5s infinite linear;
-  -o-animation: rotateLoop 0.5s infinite linear;
-}
+
+

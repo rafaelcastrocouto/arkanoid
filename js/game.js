@@ -1,15 +1,46 @@
 var Game = function(){ 
   var game = {
     init: function(){ 
-      game.fps = game.properties.fps;
+      game.fps = game.properties.fps || 50;
       game.rate = 1000 / game.fps;
-      game.level = game.properties.levels; 
+      game.level = game.properties.levels || [['brick','brick','brick','brick','brick','brick','brick','brick','brick']]; 
+      //LOAD ORDER
       game.events.init();
       game.css.init();
       game.container.init();
-      game.menu.init();
+      game.intro.show();
       game.score.init();
-      game.audio.init();
+      game.audio.init();      
+    },
+    intro: {
+      show: function(){
+        if(game.properties.intro){
+            game.css.addRule('#intro', {            
+              'width': game.px(game.container.width),
+              'font-size': game.px(game.container.height/6),
+              'top': game.px(game.container.height/2.166)
+            });  
+            game.intro.el = game.create('div', {id: 'intro'});
+            var logo = game.properties.intro.title || 'Game', 
+                spans = [];
+            for(var i = 0; i < logo.length ; i++){
+              spans.push('<span>'+logo[i]+'</span>');
+            }
+            game.css.addRule('#intro span', { 
+              '-webkit-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
+              '-moz-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
+              '-o-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
+              'animation': 'intro '+game.properties.intro.duration+'s infinite linear'
+             });  
+            game.intro.el.innerHTML = spans.join('');
+            game.container.add(game.intro.el);
+            setTimeout(game.intro.hide, game.properties.intro.duration * 1000 || 3000);
+        } else game.menu.init();
+      },
+      hide: function(){
+        game.intro.el.style.display = 'none';
+        game.menu.init()
+      }
     },
     create: function(t, props){
       var el = document.createElement(t);
@@ -52,8 +83,8 @@ var Game = function(){
 
     css: {
       init: function(){
-        game.width = game.properties.width;
-        game.height = game.properties.height;  
+        game.width = game.properties.width || 400;
+        game.height = game.properties.height || 300;  
         var el = game.create('style',{id: 'rules'}); 
         game.add(el);
         game.css.el = el;
@@ -191,23 +222,25 @@ var Game = function(){
         return bkg;
       },
       font: function() {
-        var el = game.create('style',{id: 'font'}); 
-        game.add(el);
-        game.css.font.el = el;        
-        var css = [];
-        for(f in game.properties.fonts){
-          var font = game.properties.fonts[f];
-          var str = [
-            '@font-face{', 
-            '  font-family: \''+ font + '\';',
-            '  src: url(\'font/'+font+'.eot\' ),',
-            '       url(\'font/'+font+'.ttf\' ),',
-            '       url(\'font/'+font+'.woff\');',
-            '}'
-          ];
-          css.push(str.join('\n'));
+        if(game.properties.fonts){
+          var el = game.create('style',{id: 'font'}); 
+          game.add(el);
+          game.css.font.el = el;        
+          var css = [];
+          for(f in game.properties.fonts){
+            var font = game.properties.fonts[f];
+            var str = [
+              '@font-face{', 
+              '  font-family: \''+ font + '\';',
+              '  src: url(\'font/'+font+'.eot\' ),',
+              '       url(\'font/'+font+'.ttf\' ),',
+              '       url(\'font/'+font+'.woff\');',
+              '}'
+            ];
+            css.push(str.join('\n'));
+          }
+          game.css.font.el.textContent = css.join('\n');
         }
-        game.css.font.el.textContent = css.join('\n');
       }
     },
 
@@ -262,8 +295,8 @@ var Game = function(){
             color2 = ' rgb(180, 180, 200)',
             color3 = ' rgb(130, 130, 150)',
             color4 = ' rgb(190, 190, 210)',
-            color5 = ' rgba( 0, 0, 0, 0.5)';
-
+            color5 = ' rgba( 0, 0, 0, 0.5)';      
+        
         game.css.addRule('#menu',{
           'width': game.px(game.menu.width),
           'left': game.px(game.menu.left),
@@ -401,10 +434,12 @@ var Game = function(){
         game.score.showHighScore();
       },
       github: function(){
-        window.location = game.properties.github;
+        window.location = game.properties.source || 'https://github.com';
       },
       credits: function(){
-        alertify.alert(game.properties.credits.join('<br>'))
+        var c = 'rafælcastrocouto';
+        if(game.properties.credits) c = game.properties.credits.join('<br>');
+        alertify.alert(c);
       }
     },
 
@@ -540,6 +575,14 @@ var Game = function(){
             destroy: 'destroy'
           }                
         };
+        if(!game.properties.blocks){
+          game.properties.blocks = {
+            'brick': {
+              life: 2,
+              color: ['#b22','#2b2']
+            }
+          };
+        }
         for(var type in game.properties.blocks){
           var b = game.properties.blocks[type];
           if(type == className) {
@@ -923,6 +966,7 @@ var Game = function(){
         }
       },  
       launch: function(block){
+        if(!game.properties.drop) game.properties.drop = 0.5;
         if(Math.random() < game.properties.drop) { 
           var t = ~~(Math.random() * game.power.types.length);
           var power = game.power.build(game.power.types[t]); 
@@ -1204,7 +1248,7 @@ var Game = function(){
           }
         }
         if(game.audio.enabled && game.audio.format){
-          var l = game.properties.audio;
+          var l = game.properties.audio || [];
           for (var i = 0; i < l.length; i++) {
             var name = l[i];
             game.audio[name] = game.create('audio', {src: 'audio/'+ name +'.'+game.audio.format});

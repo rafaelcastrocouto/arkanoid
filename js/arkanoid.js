@@ -5,6 +5,10 @@ arkanoid.game.properties = {
   width: 1000,
   height: 750,
   drop:  0.25,
+  intro: {
+    title: 'ARKANOID',
+    duration: 5
+  },
   audio: [ 'hit', 'destroy', 'power', 'pad' ],
   fonts: ['segment', 'pixel', 'entypo'],
   blocks: {
@@ -38,9 +42,9 @@ arkanoid.game.properties = {
         'stone','none' ,'stone','brick','stone','brick','stone','none' ,'stone',
         'brick','stone','metal','stone','plast','stone','metal','stone','brick',]             
   ],
-  github: 'https://github.com/rafaelcastrocouto/arkanoid',
+  source: 'https://github.com/rafaelcastrocouto/arkanoid',
   credits: [
-    '*Author*  <a target="" href="http://rafaelcastrocouto.jsapp.us">rafaelcastrocouto</a>',
+    '*Author*  <a target="" href="http://scriptogr.am/rafaelcastrocouto">rafaelcastrocouto</a>',
     '*Sounds*  <a target="" href="http://soundjax.com">soundjax.com</a>',
     '*Fonts*  <a target="" href="http://fontsquirrel.com">fontsquirrel.com</a>',
     '*Host*  <a target="" href="http://github.com">github.com</a>'
