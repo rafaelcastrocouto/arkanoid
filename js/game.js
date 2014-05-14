@@ -8,8 +8,7 @@ var Game = function(){
       game.events.init();
       game.css.init();
       game.container.init();
-      game.intro.show();
-      game.score.init();
+      game.intro.show();      
       game.audio.init();      
     },
     intro: {
@@ -284,6 +283,7 @@ var Game = function(){
         }
         game.menu.css();
         game.changeMode('menu');
+        game.score.init();
       },    
       css: function(){
         game.menu.width = 300;
