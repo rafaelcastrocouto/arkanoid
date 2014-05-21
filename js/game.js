@@ -11,36 +11,6 @@ var Game = function(){
       game.intro.show();      
       game.audio.init();      
     },
-    intro: {
-      show: function(){
-        if(game.properties.intro){
-            game.css.addRule('#intro', {            
-              'width': game.px(game.container.width),
-              'font-size': game.px(game.container.height/6),
-              'top': game.px(game.container.height/2.166)
-            });  
-            game.intro.el = game.create('div', {id: 'intro'});
-            var logo = game.properties.intro.title || 'Game', 
-                spans = [];
-            for(var i = 0; i < logo.length ; i++){
-              spans.push('<span>'+logo[i]+'</span>');
-            }
-            game.css.addRule('#intro span', { 
-              '-webkit-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
-              '-moz-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
-              '-o-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
-              'animation': 'intro '+game.properties.intro.duration+'s infinite linear'
-             });  
-            game.intro.el.innerHTML = spans.join('');
-            game.container.add(game.intro.el);
-            setTimeout(game.intro.hide, game.properties.intro.duration * 1000 || 3000);
-        } else game.menu.init();
-      },
-      hide: function(){
-        game.intro.el.style.display = 'none';
-        game.menu.init()
-      }
-    },
     create: function(t, props){
       var el = document.createElement(t);
       el.on = game.on;
@@ -63,6 +33,7 @@ var Game = function(){
     },
     changeMode: function(mode){
       switch (mode) {
+      //case 'intro'
         case 'menu':
           game.menu.el.style['display'] = 'block';
         break;
@@ -74,10 +45,11 @@ var Game = function(){
           game.loop(game.ball.move);
           game.loop(game.power.move);
         break;
+        //case 'paused'
       }
       game.mode = mode;
-    },
-
+    },   
+    
     ///////////////////////////////STYLE///////////////////////////////
 
     css: {
@@ -271,6 +243,44 @@ var Game = function(){
         game.container.el.appendChild(el);
       } 
     },
+    
+    ///////////////////////////////INTRO///////////////////////////////
+    
+    intro: {
+      show: function(){
+        if(game.properties.intro){
+            game.css.addRule('#intro', {            
+              'width': game.px(game.container.width),
+              'font-size': game.px(game.container.height/6),
+              'top': game.px(game.container.height/2.166)
+            });  
+            game.intro.el = game.create('div', {id: 'intro'});
+            var logo = game.properties.intro.title || 'Game', 
+                spans = [];
+            for(var i = 0; i < logo.length ; i++){
+              spans.push('<span>'+logo[i]+'</span>');
+            }
+            game.css.addRule('#intro', {
+              'cursor': 'pointer'
+            });
+            game.css.addRule('#intro span', { 
+              '-webkit-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
+              '-moz-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
+              '-o-animation': 'intro '+game.properties.intro.duration+'s infinite linear',
+              'animation': 'intro '+game.properties.intro.duration+'s infinite linear'
+            });
+            game.intro.el.innerHTML = spans.join('');            
+            game.container.add(game.intro.el);
+            game.intro.el.on('click',game.intro.hide);
+            setTimeout(game.intro.hide, game.properties.intro.duration * 1000 || 3000);
+            
+        } else game.menu.init();
+      },
+      hide: function(){
+        game.intro.el.style.display = 'none';
+        game.menu.init()
+      }
+    },     
 
     ///////////////////////////////MENU///////////////////////////////
 
@@ -312,6 +322,15 @@ var Game = function(){
         });
         game.css.addRule('.alertify', {
           'font': game.px(28)+'/'+game.px(36)+' "segment", sans-serif'
+        });  
+        game.css.addRule('.alertify-buttons', {
+          'margin-bottom':  game.px(35)
+        });        
+        game.css.addRule('.alertify a, .alertify a:visited', {
+          'color':  '#ccf'
+        });        
+        game.css.addRule('.alertify a:hover', {
+          'color':  '#eef'
         });
         game.css.addRule('.button, .alertify-button', {
             'outline': '0',
@@ -1275,13 +1294,13 @@ var Game = function(){
       game.css.paint('288');
       game.ui.el.textContent = '* YOU WIN *';
       game.changeMode('menu');
-      game.ask('You Win!<br>*Score* ' + game.currentScore + '<br>Enter your name', 'Anonymous');
+      game.ask('You Win<br>*Score* ' + game.currentScore + '<br>Enter your name', 'Anonymous');
     },
     over: function(){
       game.css.paint('#d22');
       game.ui.el.textContent = '* GAME OVER *';
       game.changeMode('menu');
-      game.ask('Game Over!<br>*Score* ' + game.currentScore + '<br>Enter your name', 'Anonymous');
+      game.ask('Game Over<br>*Score* ' + game.currentScore + '<br>Enter your name', 'Anonymous');
     },
     end: function(name){
       if(!name) name = 'Anonymous';

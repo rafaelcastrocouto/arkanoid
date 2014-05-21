@@ -32,7 +32,9 @@ html, body {
   color: #111;
   animation: rotateLoop 0.5s infinite linear;
 }
-
+.alertify input {
+  font-family: 'segment';
+}
 /*///////////ANIMATIONS////////////*/
 
 @keyframes intro {

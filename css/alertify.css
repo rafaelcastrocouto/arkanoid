@@ -19,7 +19,6 @@ a { text-decoration: none}
 .alertify {
   position: fixed; z-index: 99999;
   top: 50px; left: 50%;
-  width: 550px;
   margin-left: -275px;
   opacity: 1;
 }
@@ -137,14 +136,12 @@ a { text-decoration: none}
   border: 1px solid #D6E9C6;
 }
 
-@media only screen and (max-width: 680px) {
-  .alertify,
-  .alertify-logs {
-    width: 60%;
-    box-sizing: border-box;
-  }
-  .alertify {
-    left: 20%;
-    margin: 0;
-  }
+.alertify,
+.alertify-logs {
+  width: 60%;
+  box-sizing: border-box;
+}
+.alertify {
+  left: 20%;
+  margin: 0;
 }
