@@ -8,8 +8,7 @@ html, body {
 #intro {
   text-align: center;
   font-family: 'segment';
-/*  color: #fff;*/
-  color: transparent;  
+  color: #fff;
 }
 #intro span {
   display: inline-block;
