@@ -14,19 +14,19 @@ arkanoid.game.properties = {
   blocks: {
     'metal': {
       life: 0, //unbreakable
-      color: ['#bbb']
+      color: ['#257b9b']
     },
     'stone': {
       life: 5,
-      color: ['#222','#444','#666','#b22','#2b2']
+      color: ['#134e9b','#663bb5','#c02f9b','#ef5c77','#28b9b5']
     },
     'brick': {
       life: 2,
-      color: ['#b22','#2b2']
+      color: ['#ff4e78','#ff9d38']
     },
     'plast': {
       life: 1,
-      color: ['#2b2']
+      color: ['#61e85b']
     }
   },
   levels: [ 

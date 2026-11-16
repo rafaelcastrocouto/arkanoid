@@ -61,7 +61,7 @@ var Game = function(){
         game.css.el = el;
         game.css.resize();
         game.css.font();
-        game.css.paint('#bbb');
+        game.css.paint('#080b1b');
       },
       events: function(){
         window.on('orientationchange', game.css.resize);
@@ -166,29 +166,39 @@ var Game = function(){
           w = obj.width || obj.radius;
         }
         el.style['background'] = color;
-        el.style['box-shadow'] = '0 0 '+game.px(10)+' black';
         var color2 = game.css.dark(color);
-        el.style['background-image'] = '-webkit-radial-gradient(center, ellipse cover, '+color+' 50%,'+color2+' 100%)';
+        el.style['background-image'] = 'radial-gradient(ellipse at 35% 25%, '+color+' 0%, '+color2+' 100%)';
+        el.style['box-shadow'] = '0 0 '+game.px(18)+' '+color;
       },
       dark: function(color, inv){
         if(!inv) inv = 1;
+        var hex = color.charAt(0) == '#' ? color.slice(1) : color;
+        if(hex.length == 3) {
+          hex = hex.charAt(0) + hex.charAt(0) +
+                hex.charAt(1) + hex.charAt(1) +
+                hex.charAt(2) + hex.charAt(2);
+        }
         var c = {
-          r: parseInt(color[1], 16) + (6 * -inv),
-          g: parseInt(color[2], 16) + (6 * -inv),
-          b: parseInt(color[3], 16) + (6 * -inv)
+          r: parseInt(hex.slice(0, 2), 16) - (102 * inv),
+          g: parseInt(hex.slice(2, 4), 16) - (102 * inv),
+          b: parseInt(hex.slice(4, 6), 16) - (102 * inv)
         };
-        if(c.r < 0) c.r = 0; if(c.r > 15) c.r = 15; 
-        if(c.g < 0) c.g = 0; if(c.g > 15) c.g = 15; 
-        if(c.b < 0) c.b = 0; if(c.b > 15) c.b = 15;
-
-        return '#' + c.r.toString(16) + c.g.toString(16) + c.b.toString(16);
+        c.r = Math.max(0, Math.min(255, c.r));
+        c.g = Math.max(0, Math.min(255, c.g));
+        c.b = Math.max(0, Math.min(255, c.b));
+        var r = c.r.toString(16);
+        var g = c.g.toString(16);
+        var b = c.b.toString(16);
+        return '#' + (r.length == 1 ? '0' + r : r) +
+                     (g.length == 1 ? '0' + g : g) +
+                     (b.length == 1 ? '0' + b : b);
 
       },
       background: function(color){
         var color2 = game.css.dark(color);
         var bkg = [ 
           color, 
-          '-webkit-radial-gradient(center, ellipse cover, '+color+' 0%,'+color2+' 100%)'
+          'radial-gradient(ellipse at 35% 25%, '+color+' 0%,'+color2+' 100%)'
         ];
         return bkg;
       },
@@ -224,7 +234,7 @@ var Game = function(){
         });
         game.add(game.container.el);  
         game.container.css();
-        game.css.paint('#69a', game.container);
+        game.css.paint('#080d25', game.container);
       },
       css: function(){
         game.container.height = (game.height * 0.96);
@@ -301,11 +311,11 @@ var Game = function(){
         game.menu.left = (game.width / 2) - (game.menu.width / 2);
         game.menu.top = (game.height / 2) - (game.menu.height / 2);
 
-        var color1 = ' rgb(150, 150, 170)',
-            color2 = ' rgb(180, 180, 200)',
-            color3 = ' rgb(130, 130, 150)',
-            color4 = ' rgb(190, 190, 210)',
-            color5 = ' rgba( 0, 0, 0, 0.5)';      
+        var color1 = ' rgb(0, 234, 255)',
+            color2 = ' rgb(20, 43, 91)',
+            color3 = ' rgb(8, 12, 35)',
+            color4 = ' rgb(45, 70, 130)',
+            color5 = ' rgba(0, 234, 255, 0.35)';
         
         game.css.addRule('#menu',{
           'width': game.px(game.menu.width),
@@ -314,7 +324,7 @@ var Game = function(){
         });
 
         game.css.addRule('.button[DISABLED], .alertify-button[DISABLED]', {
-            'color': '#ccc',
+            'color': '#7185b8',
             'cursor': 'default'
         });
         game.css.addRule('.button',{
@@ -327,10 +337,10 @@ var Game = function(){
           'margin-bottom':  game.px(35)
         });        
         game.css.addRule('.alertify a, .alertify a:visited', {
-          'color':  '#ccf'
+          'color':  '#59e9ff'
         });        
         game.css.addRule('.alertify a:hover', {
-          'color':  '#eef'
+          'color':  '#ff65d3'
         });
         game.css.addRule('.button, .alertify-button', {
             'outline': '0',
@@ -339,11 +349,11 @@ var Game = function(){
             'color': 'white',
             'text-shadow': ' 0px ' + game.px(-3) + color1 + ',' +
                            ' 0px ' + game.px( 3) + color2 ,
-            'background-color': color2,
-            'box-shadow':  '0px ' + game.px(2)   + ' ' + game.px(6)  + color5 + ',' +
-                           '0px ' + game.px(-35) + ' ' + game.px(35) + color3 + ' inset,'+ 
-                           '0px ' + game.px(2)   + ' ' + game.px(6)  + ' white inset',
-            'border': game.px(4) + ' solid ' + color1 ,
+            'background-color': color3,
+            'box-shadow':  '0px ' + game.px(2)   + ' ' + game.px(12) + color5 + ',' +
+                           '0px ' + game.px(-35) + ' ' + game.px(35) + color2 + ' inset,'+
+                           '0px ' + game.px(2)   + ' ' + game.px(6)  + ' rgba(255,255,255,0.28) inset',
+            'border': game.px(2) + ' solid ' + color1 ,
             'border-radius': game.px(12),
             'padding': game.px(16) + ' ' + game.px(16),
             'cursor': 'pointer'
@@ -466,7 +476,7 @@ var Game = function(){
 
     loadLevel: function(level){
       game.menu.el.style['display'] = 'none';
-      game.css.paint('#478', game.container);
+      game.css.paint('#080d25', game.container);
       game.ui.init();   
       game.stage.init();
       game.block.array = [];
@@ -558,6 +568,8 @@ var Game = function(){
           game.clear(game.stage.el);
           game.stage.el.style['display'] = 'block';         
         };    
+        game.particles.array = [];
+        game.stage.setupParticles();
       },
       css: function(){
         game.stage.height = 0.905 * game.height;
@@ -565,13 +577,34 @@ var Game = function(){
         game.stage.top = 34;
         game.stage.left = 8;
         game.css.addRule('#stage',{
-          'background': '#fff',
-          'box-shadow': 'inset 0 0 '+  game.px(20) +' black',
+          'background': '#080d25',
+          'background-image': 'linear-gradient(rgba(28, 79, 143, 0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(28, 79, 143, 0.16) 1px, transparent 1px), radial-gradient(ellipse at 50% 100%, #121b42, #070a1b 80%)',
+          'background-size': game.px(40) + ' ' + game.px(40) + ', ' + game.px(40) + ' ' + game.px(40) + ', 100% 100%',
+          'box-shadow': 'inset 0 0 '+  game.px(24) +' #02040d, 0 0 '+game.px(16)+' rgba(0, 234, 255, 0.35)',
           'height': game.px(game.stage.height),
           'width': game.px(game.stage.width),
           'top':  game.px(game.stage.top),
           'left':  game.px(game.stage.left)
-        });        
+        });
+        if(game.stage.particles){
+          game.stage.particles.width = game.stage.width;
+          game.stage.particles.height = game.stage.height;
+          game.stage.particles.style.width = game.px(game.stage.width);
+          game.stage.particles.style.height = game.px(game.stage.height);
+        }
+      },
+      setupParticles: function(){
+        if(!game.stage.particles){
+          game.stage.particles = game.create('canvas', {className: 'particle-layer'});
+          if(game.stage.particles.getContext) {
+            game.stage.context = game.stage.particles.getContext('2d');
+          }
+        }
+        game.stage.particles.width = game.stage.width;
+        game.stage.particles.height = game.stage.height;
+        game.stage.particles.style.width = game.px(game.stage.width);
+        game.stage.particles.style.height = game.px(game.stage.height);
+        game.stage.add(game.stage.particles);
       },
       add: function(el){
         game.stage.el.appendChild(el);
@@ -661,6 +694,13 @@ var Game = function(){
         for (var i = 0; i < game.block.array.length; i++) { 
           var block = game.block.array[i];     
           if(game.collision(ball, block)){
+            var destroyed = block.life > 0 && block.hitCount + 1 >= block.life;
+            game.particles.emit(
+              block.x + block.width / 2,
+              block.y + block.height / 2,
+              block.color[block.hitCount] || '#00eaff',
+              destroyed ? 16 : 7
+            );
             if(block.life > 0) ++block.hitCount;
             if(block.hitCount == block.life && block.life > 0) { //destroy block
               if(game.audio.enabled) game.audio[block.audio.destroy].play();
@@ -720,7 +760,7 @@ var Game = function(){
           case 1:
           case 2:
             game.ball.setRadius();
-            game.css.paint('#244', ball);
+            game.css.paint('#20dfff', ball);
           break;
         };
         game.ball.position();
@@ -780,10 +820,12 @@ var Game = function(){
           //hit sides
           if(ball.nx > game.stage.width - (ball.radius * 2)
           || ball.nx < 0){ 
+            game.particles.emit(ball.x + ball.radius, ball.y + ball.radius, '#00eaff', 4);
             ball.speed.x *= -1;
           }
           //hit top
           if(ball.ny > game.stage.height - 30){  
+            game.particles.emit(ball.x + ball.radius, ball.y + ball.radius, '#ff38c7', 4);
             ball.speed.y *= -1;
           }
           //hit pad
@@ -799,6 +841,10 @@ var Game = function(){
           }
           //keep moving
           else {
+              ball.trailTick = (ball.trailTick || 0) + 1;
+              if(ball.trailTick % 3 == 0) {
+                game.particles.emit(ball.x + ball.radius, ball.y + ball.radius, '#00eaff', 1);
+              }
               game.ball.moveTo({
               x: ball.x + ball.speed.x,
               y: ball.y + ball.speed.y
@@ -811,7 +857,7 @@ var Game = function(){
       },
       restart: function(){
         --game.currentLifes;
-        if(game.currentLifes == 1) game.css.paint('#a66');
+        if(game.currentLifes == 1) game.css.paint('#ff477e');
         game.ui.update();
         game.ball.build(game.currentLevel);
         game.pad.init();
@@ -850,7 +896,7 @@ var Game = function(){
             game.pad.setWidth(100);
           break;
         }
-        game.css.paint('#789', game.pad); 
+        game.css.paint('#20dfff', game.pad);
         game.pad.css();
         game.pad.position();
       },
@@ -894,6 +940,7 @@ var Game = function(){
       },
       checkCollision: function(ball){
         if(game.collision(ball, game.pad)){ 
+          game.particles.emit(ball.x + ball.radius, game.pad.y + game.pad.height, '#00eaff', 10);
           if(game.audio.enabled) game.audio.pad.play();
           //hit pad sides
           if(ball.y < game.pad.y + game.pad.height){
@@ -954,19 +1001,19 @@ var Game = function(){
         power.type = type; 
         switch(type) {
           case 'increase':
-            game.css.paint('#28d', power);
+            game.css.paint('#00c9ff', power);
             power.el.textContent = '<>';
           break;  
           case 'decrease':
-            game.css.paint('#d82', power);
+            game.css.paint('#ff38b8', power);
             power.el.textContent = '><';
           break;
           case 'fast':
-            game.css.paint('#d82', power);
+            game.css.paint('#ff38b8', power);
             power.el.textContent = '+';
           break;     
           case 'slow':
-            game.css.paint('#28d', power);
+            game.css.paint('#00c9ff', power);
             power.el.textContent = '-';
           break;     
         };
@@ -1030,6 +1077,7 @@ var Game = function(){
       },
       checkCollision: function(power){
         if(game.collision(power, game.pad)){ 
+          game.particles.emit(power.x + power.radius, game.pad.y + game.pad.height, '#ff38c7', 14);
           game.power.end(power);
           if(game.audio.enabled) game.audio.power.play();
           switch(power.type) {
@@ -1089,6 +1137,59 @@ var Game = function(){
       return distance <= Math.pow(ball.radius, 2);
     },
 
+    ///////////////////////////////PARTICLES///////////////////////////////
+
+    particles: {
+      array: [],
+      emit: function(x, y, color, count){
+        for(var i = 0; i < count; i++){
+          var angle = Math.random() * Math.PI * 2;
+          var speed = 1 + Math.random() * 4;
+          game.particles.array.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 2 + Math.random() * 4,
+            life: 18 + Math.random() * 20,
+            maxLife: 38,
+            color: color
+          });
+        }
+        if(game.particles.array.length > 240) {
+          game.particles.array.splice(0, game.particles.array.length - 240);
+        }
+      },
+      update: function(){
+        var context = game.stage && game.stage.context;
+        if(!context) return;
+        context.clearRect(0, 0, game.stage.particles.width, game.stage.particles.height);
+        for(var i = game.particles.array.length - 1; i >= 0; i--){
+          var particle = game.particles.array[i];
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+          particle.vy -= 0.06;
+          particle.life -= 1;
+          if(particle.life <= 0){
+            game.particles.array.splice(i, 1);
+            continue;
+          }
+          context.globalAlpha = particle.life / particle.maxLife;
+          context.fillStyle = particle.color;
+          context.shadowColor = particle.color;
+          context.shadowBlur = 10;
+          context.fillRect(
+            particle.x,
+            game.stage.height - particle.y,
+            particle.size,
+            particle.size
+          );
+        }
+        context.globalAlpha = 1;
+        context.shadowBlur = 0;
+      }
+    },
+
     ///////////////////////////////EVENTS///////////////////////////////
 
     events: {
@@ -1123,7 +1224,8 @@ var Game = function(){
         if(game.events.delay && isPlaying) {
           game.pad.el.style['left'] = game.px(game.pad.x); 
         }
-        if(isReady) game.ball.followPad(); 
+        if(isReady) game.ball.followPad();
+        game.particles.update();
         game.loop(game.events.loop)
       },
       noDefault: function(event){
@@ -1225,13 +1327,13 @@ var Game = function(){
           game.lastMode = game.mode;
           game.changeMode('paused');
           game.ui.el.textContent = '* PAUSED *'
-          game.css.paint('#222');
+          game.css.paint('#080b1b');
         }
       } else { // UNPAUSE
         game.changeMode(game.lastMode);
         if(game.mode == 'ready' || game.mode == 'playing') {
           game.ui.update();
-          game.css.paint('#bbb');
+          game.css.paint('#080b1b');
         }
       }
     },    
@@ -1294,13 +1396,13 @@ var Game = function(){
       );      
     },
     win: function(){
-      game.css.paint('288');
+      game.css.paint('#10122e');
       game.ui.el.textContent = '* YOU WIN *';
       game.changeMode('menu');
       game.ask('You Win<br>*Score* ' + game.currentScore + '<br>Enter your name', 'Anonymous');
     },
     over: function(){
-      game.css.paint('#d22');
+      game.css.paint('#240d2c');
       game.ui.el.textContent = '* GAME OVER *';
       game.changeMode('menu');
       game.ask('Game Over<br>*Score* ' + game.currentScore + '<br>Enter your name', 'Anonymous');
@@ -1311,8 +1413,8 @@ var Game = function(){
       game.ui.el.style['display'] = 'none';
       game.stage.el.style['display'] = 'none';
       game.currentLevel = 0;   
-      game.css.paint('#bbb');
-      game.css.paint('#69a', game.container);
+      game.css.paint('#080b1b');
+      game.css.paint('#080d25', game.container);
     }
   };
   this.game = game;

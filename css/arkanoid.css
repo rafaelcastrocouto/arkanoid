@@ -4,11 +4,18 @@ html, body {
   margin: 0;
   overflow: hidden;
   user-select: none;
+  background: #050817;
+}
+body {
+  background-image:
+    radial-gradient(ellipse at 50% 45%, rgba(32, 75, 160, 0.3), transparent 68%),
+    linear-gradient(135deg, #050817, #10102b 55%, #071326);
 }
 #intro {
   text-align: center;
   font-family: 'segment';
-  color: #fff;
+  color: #fff0a6;
+  text-shadow: 0 0 12px #00eaff, 0 0 32px #ff31bd;
 }
 #intro span {
   display: inline-block;
@@ -25,11 +32,22 @@ html, body {
 #ui{
   font-family: 'segment';
   color: #fff;
+  text-shadow: 0 0 8px #00eaff, 0 0 18px #007bff;
 }
 .power{
   font-family: 'pixel';
-  color: #111;
+  color: #fff;
   animation: rotateLoop 0.5s infinite linear;
+}
+.particle-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+.block, #ball0, #pad {
+  box-sizing: border-box;
 }
 .alertify input {
   font-family: 'segment';
