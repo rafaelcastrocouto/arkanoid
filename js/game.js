@@ -735,6 +735,7 @@ var Game = function(){
     ball: {
       radius: 12,
       speed: 6,
+      maxSpeed: 12,
       acceleration: 1.01,
       array: [],
       init: function(id, radius){
@@ -795,6 +796,26 @@ var Game = function(){
           'height': game.px(2 * r)
         })      
       },
+      limitSpeed: function(ball){
+        var x = ball.speed.x;
+        var y = ball.speed.y;
+        if(isNaN(x) || isNaN(y)) throw new Error('Invalid ball speed');
+        if(!isFinite(x)) x = x < 0 ? -game.ball.maxSpeed : game.ball.maxSpeed;
+        if(!isFinite(y)) y = y < 0 ? -game.ball.maxSpeed : game.ball.maxSpeed;
+
+        var largest = Math.max(Math.abs(x), Math.abs(y));
+        if(largest == 0) return;
+        var scale = Math.sqrt(
+          Math.pow(x / largest, 2) + Math.pow(y / largest, 2)
+        );
+        var magnitude = largest * scale;
+        if(magnitude > game.ball.maxSpeed){
+          x = x / largest / scale * game.ball.maxSpeed;
+          y = y / largest / scale * game.ball.maxSpeed;
+        }
+        ball.speed.x = x;
+        ball.speed.y = y;
+      },
       moveTo: function(o, ball){
         if(!ball) ball = game.ball.array[0];
         ball.x = o.x;
@@ -832,6 +853,7 @@ var Game = function(){
           game.pad.checkCollision(ball);
           //hit blocks
           game.block.checkCollision(ball);
+          game.ball.limitSpeed(ball);
 
           //hit bottom
           if (ball.y < 0) {
