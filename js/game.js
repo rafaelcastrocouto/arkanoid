@@ -1111,12 +1111,15 @@ var Game = function(){
       loop: function(){ 
         var isReady = (game.mode == 'ready');
         var isPlaying = (isReady || game.mode == 'playing');
+        var now = (new Date).getTime();
+        var maxCatchUp = 5;
         game.events.delay = 0;
-        while ((new Date).getTime() > game.date) { 
+        while (now > game.date && game.events.delay < maxCatchUp) {
           if(isPlaying && game.pad.key) game.pad.keyboardMove(game.pad.key);
           game.date += game.rate;
           ++game.events.delay;
         } 
+        if(game.events.delay == maxCatchUp && now > game.date) game.date = now;
         if(game.events.delay && isPlaying) {
           game.pad.el.style['left'] = game.px(game.pad.x); 
         }
